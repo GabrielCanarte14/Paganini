@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:paganini_wallet/features/auth/domain/entities/entities.dart';
-import 'package:paganini_wallet/injection_container.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../shared/data/services/services.dart';
