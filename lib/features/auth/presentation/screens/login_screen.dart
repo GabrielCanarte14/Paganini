@@ -89,18 +89,26 @@ class _LoginForm extends StatelessWidget {
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+                      padding: EdgeInsets.fromLTRB(25, 30, 25, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(height: 10.rh(context)),
                           Text(
-                            'Bienvenido \n Por favor, ingresa tus credenciales',
-                            style: textStyles.bodyMedium!
-                                .copyWith(color: Colors.black54),
+                            'BIENVENIDO',
+                            style: textStyles.bodyLarge!.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 80.rh(context)),
+                          Text(
+                            'Por favor, ingresa tus credenciales',
+                            style: textStyles.bodyMedium!.copyWith(
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 50.rh(context)),
                           const UserInput(),
                           SizedBox(height: 20.rh(context)),
                           const PasswordInput(),

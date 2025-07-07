@@ -34,18 +34,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLoginRequested(
       LoginEvent event, Emitter<AuthState> emit) async {
-    emit(Checking());
-    final failureOrUser = await loginUseCase(
-        Params(username: event.username, password: event.password));
-    await failureOrUser!.fold((failure) {
-      emit(UserError(message: _mapFailureToMessage(failure)));
-    }, (user) async {
-      await keyValueStorageService.setKeyValue('token', user.token);
-      emit(Authenticated(user: user));
-      await keyValueStorageService.setKeyValue('username', user.email);
-      await keyValueStorageService.setKeyValue('password', event.password);
-    });
+    await keyValueStorageService.setKeyValue('token', '1231');
+    await keyValueStorageService.setKeyValue('username', event.username);
+    await keyValueStorageService.setKeyValue('password', event.password);
+    emit(Authenticated(
+        user: User(
+            token: '1231',
+            firstName: 'Gabriel',
+            lastName: 'Canarte',
+            email: 'lcanarte@espol.edu.ec',
+            celular: '0992321232')));
   }
+  //   emit(Checking());
+  //   final failureOrUser = await loginUseCase(
+  //       Params(username: event.username, password: event.password));
+  //   await failureOrUser!.fold((failure) {
+  //     emit(UserError(message: _mapFailureToMessage(failure)));
+  //   }, (user) async {
+  //     await keyValueStorageService.setKeyValue('token', user.token);
+  //     emit(Authenticated(user: user));
+  //     await keyValueStorageService.setKeyValue('username', user.email);
+  //     await keyValueStorageService.setKeyValue('password', event.password);
+  //   });
+  // }
 
   Future<void> _onLogoutRequested(
       LogoutEvent event, Emitter<AuthState> emit) async {

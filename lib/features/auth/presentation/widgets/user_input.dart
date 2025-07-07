@@ -20,7 +20,7 @@ class UserInput extends StatelessWidget {
             color: Colors.black38,
             width: 20.rf(context),
           ),
-          label: 'Usuario',
+          label: 'Correo',
           keyboardType: TextInputType.emailAddress,
           onChanged: (value) {
             context.read<LoginFormCubit>().onUsernameChange(value);
