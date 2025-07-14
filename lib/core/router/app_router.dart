@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:paganini_wallet/core/router/app_router_notifier.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:paganini_wallet/features/auth/presentation/screens/screens.dart';
-//import 'package:paganini_wallet/features/home/presentation/screens/screens.dart';
+import 'package:paganini_wallet/features/home/presentation/screens/main_activity_screen.dart';
 import 'package:paganini_wallet/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:paganini_wallet/injection_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +27,7 @@ final appRouter = GoRouter(
     ///* Home Routes
     GoRoute(
       path: '/home',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const MainActivityScreen(),
     ),
 
     GoRoute(
