@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:paganini_wallet/features/history/presentation/screens/history_screen.dart';
 import 'package:paganini_wallet/features/home/presentation/screens/home_screen.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/screens/payments_methods_screen.dart';
 import 'package:paganini_wallet/features/qr/presentation/screens/qr_screen.dart';

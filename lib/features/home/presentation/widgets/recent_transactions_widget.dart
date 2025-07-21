@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paganini_wallet/core/constants/colors.dart';
 
 class RecentTransactionsWidget extends StatelessWidget {
   const RecentTransactionsWidget({super.key});
@@ -31,7 +32,7 @@ class RecentTransactionsWidget extends StatelessWidget {
           children: const [
             Text('Transacciones recientes',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Text('Ver todas', style: TextStyle(color: Colors.blue)),
+            Text('Ver todas', style: TextStyle(color: primaryColor)),
           ],
         ),
         const SizedBox(height: 12),
