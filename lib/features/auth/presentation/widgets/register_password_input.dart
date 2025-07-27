@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/constants.dart';
 import 'package:paganini_wallet/core/theme/theme.dart';
-import 'package:paganini_wallet/features/auth/presentation/bloc/bloc.dart';
+import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cubit.dart';
 import 'package:paganini_wallet/features/shared/widgets/widgets.dart';
 
-class PasswordInput extends StatelessWidget {
+class RegisterPasswordInput extends StatelessWidget {
   final bool icon;
-  const PasswordInput({required this.icon, super.key});
+  const RegisterPasswordInput({required this.icon, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginFormCubit, LoginFormState>(
+    return BlocBuilder<RegisterFormCubit, RegisterFormState>(
         builder: (context, state) {
       return CustomTextFormField(
           key: const Key('login_password_input'),
@@ -22,7 +22,7 @@ class PasswordInput extends StatelessWidget {
           label: 'Contraseña',
           obscureText: true,
           onChanged: (value) {
-            context.read<LoginFormCubit>().onPasswordChanged(value);
+            context.read<RegisterFormCubit>().onPasswordChanged(value);
           },
           errorMessage:
               state.isFormPosted ? state.password.errorMessage : null);

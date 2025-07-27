@@ -11,14 +11,24 @@ class Empty extends AuthState {}
 
 class Checking extends AuthState {}
 
-class Authenticated extends AuthState {
-  final User user;
+class Registering extends AuthState {}
+
+class Register extends AuthState {
   final String mensaje;
 
-  const Authenticated({required this.user, this.mensaje = ''});
+  const Register({this.mensaje = ''});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [mensaje];
+}
+
+class Authenticated extends AuthState {
+  final String mensaje;
+
+  const Authenticated({this.mensaje = ''});
+
+  @override
+  List<Object> get props => [];
 }
 
 class Loginout extends AuthState {}

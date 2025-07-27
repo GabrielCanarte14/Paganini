@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/constants.dart';
 import 'package:paganini_wallet/core/theme/theme.dart';
-import 'package:paganini_wallet/features/auth/presentation/bloc/bloc.dart';
+import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cubit.dart';
 import 'package:paganini_wallet/features/shared/widgets/widgets.dart';
 
-class UserInput extends StatelessWidget {
+class RegisterUserInput extends StatelessWidget {
   final bool icon;
-  const UserInput({
+  const RegisterUserInput({
     required this.icon,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginFormCubit, LoginFormState>(
+    return BlocBuilder<RegisterFormCubit, RegisterFormState>(
       builder: (context, state) {
         return CustomTextFormField(
           icon: icon
@@ -27,9 +27,9 @@ class UserInput extends StatelessWidget {
           label: 'Correo',
           keyboardType: TextInputType.emailAddress,
           onChanged: (value) {
-            context.read<LoginFormCubit>().onUsernameChange(value);
+            context.read<RegisterFormCubit>().onEmailChanged(value);
           },
-          errorMessage: state.isFormPosted ? state.usuario.errorMessage : null,
+          errorMessage: state.isFormPosted ? state.email.errorMessage : null,
         );
       },
     );

@@ -38,6 +38,21 @@ class LogoutEvent extends AuthEvent {
   const LogoutEvent({this.user});
 }
 
+class RegisterEvent extends AuthEvent {
+  final String name;
+  final String lastname;
+  final String email;
+  final String phone;
+  final String password;
+
+  const RegisterEvent(
+      {required this.name,
+      required this.lastname,
+      required this.email,
+      required this.phone,
+      required this.password});
+}
+
 class CheckAuthStatusEvent extends AuthEvent {}
 
 class AuthErrorEvent extends AuthEvent {

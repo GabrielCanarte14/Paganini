@@ -20,43 +20,48 @@ const String INVALID_INPUT_FAILURE_MESSAGE =
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login loginUseCase;
   final Logout logoutUseCase;
+  final RegisterUser registerUserUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   AuthBloc(
       {required this.loginUseCase,
       required this.logoutUseCase,
+      required this.registerUserUseCase,
       required this.keyValueStorageService})
       : super(AuthInitial()) {
     on<LoginEvent>(_onLoginRequested);
     on<LogoutEvent>(_onLogoutRequested);
+    on<RegisterEvent>(_onRegisterRequested);
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
   }
 
   Future<void> _onLoginRequested(
       LoginEvent event, Emitter<AuthState> emit) async {
-    await keyValueStorageService.setKeyValue('token', '1231');
-    await keyValueStorageService.setKeyValue('username', event.username);
-    await keyValueStorageService.setKeyValue('password', event.password);
-    emit(Authenticated(
-        user: User(
-            token: '1231',
-            firstName: 'Gabriel',
-            lastName: 'Canarte',
-            email: 'lcanarte@espol.edu.ec',
-            celular: '0992321232')));
+    emit(Checking());
+    final failureOrUser = await loginUseCase(
+        Params(username: event.username, password: event.password));
+    await failureOrUser!.fold((failure) {
+      emit(UserError(message: _mapFailureToMessage(failure)));
+    }, (user) async {
+      emit(Authenticated());
+    });
   }
-  //   emit(Checking());
-  //   final failureOrUser = await loginUseCase(
-  //       Params(username: event.username, password: event.password));
-  //   await failureOrUser!.fold((failure) {
-  //     emit(UserError(message: _mapFailureToMessage(failure)));
-  //   }, (user) async {
-  //     await keyValueStorageService.setKeyValue('token', user.token);
-  //     emit(Authenticated(user: user));
-  //     await keyValueStorageService.setKeyValue('username', user.email);
-  //     await keyValueStorageService.setKeyValue('password', event.password);
-  //   });
-  // }
+
+  Future<void> _onRegisterRequested(
+      RegisterEvent event, Emitter<AuthState> emit) async {
+    emit(Registering());
+    final failureOrUser = await registerUserUseCase(RegisterParams(
+        name: event.name,
+        lastname: event.lastname,
+        email: event.email,
+        phone: event.phone,
+        password: event.password));
+    await failureOrUser!.fold((failure) {
+      emit(UserError(message: failure.errorMessage));
+    }, (mensaje) async {
+      emit(Register(mensaje: mensaje));
+    });
+  }
 
   Future<void> _onLogoutRequested(
       LogoutEvent event, Emitter<AuthState> emit) async {
@@ -64,8 +69,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event.user == null) {
       emit(Unauthenticated());
       await keyValueStorageService.removeKey('token');
-      await keyValueStorageService.removeKey('username');
-      await keyValueStorageService.removeKey('password');
       await Hive.box('UserModel').clear();
       return;
     }

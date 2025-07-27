@@ -12,6 +12,8 @@ import 'package:paganini_wallet/features/shared/widgets/widgets.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
+import 'register_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -109,9 +111,9 @@ class _LoginForm extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 50.rh(context)),
-                          const UserInput(),
+                          const UserInput(icon: true),
                           SizedBox(height: 20.rh(context)),
-                          const PasswordInput(),
+                          const PasswordInput(icon: true),
                           SizedBox(height: 30.rh(context)),
                           checkingRequest
                               ? UiUtils.progress()
@@ -158,7 +160,13 @@ class _LoginForm extends StatelessWidget {
                                 style: TextStyle(color: Colors.black54),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const RegisterScreen(),
+                                    ),
+                                  );
+                                },
                                 child: const Text(
                                   "Regístrate",
                                   style: TextStyle(
