@@ -39,27 +39,64 @@ class PaymentsMethodsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(child: _buildBody()),
+      body: Center(child: _buildBody(context)),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
-      child: ListView(children: [
-        CreditCard(
-          cardNumber: '1234 5678 9012 3456',
-          cardExpiry: '12/26',
-          cardHolderName: 'Gabriel Cañarte',
-          cvv: '123',
-          bankName: 'Banco Pichincha',
-          cardType: CardType.masterCard,
-          showBackSide: false,
-          frontBackground: CardBackgrounds.black,
-          backBackground: CardBackgrounds.white,
-          showShadow: true,
-        ),
-      ]),
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        children: [
+          _buildCard(context: context),
+          const SizedBox(height: 20),
+          _buildCard(context: context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCard({required BuildContext context}) {
+    return GestureDetector(
+      onLongPress: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Eliminar tarjeta'),
+            content: const Text(
+                '¿Estás seguro de que deseas eliminar esta tarjeta?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Tarjeta eliminada')),
+                  );
+                },
+                child:
+                    const Text('Eliminar', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        );
+      },
+      child: CreditCard(
+        cardNumber: '1234 5678 9012 3456',
+        cardExpiry: '12/26',
+        cardHolderName: 'Gabriel Cañarte',
+        cvv: '123',
+        bankName: 'Banco Pichincha',
+        cardType: CardType.masterCard,
+        showBackSide: false,
+        frontBackground: CardBackgrounds.black,
+        backBackground: CardBackgrounds.white,
+        showShadow: true,
+      ),
     );
   }
 }

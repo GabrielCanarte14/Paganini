@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:paganini_wallet/features/payments_methods/presentation/screens/entidad_bancaria_screen.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/screens/registro_tarjeta_screen.dart';
 
 class AddMethodModal extends StatelessWidget {
@@ -29,6 +30,11 @@ class AddMethodModal extends StatelessWidget {
               text: 'Cuenta bancaria',
               onTap: () {
                 Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const SeleccionEntidadBancariaScreen(),
+                  ),
+                );
               },
             ),
             _OptionTile(

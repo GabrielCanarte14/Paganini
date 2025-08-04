@@ -14,22 +14,25 @@ class CustomTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final String? Function(String?)? onSaved;
   final Widget? icon;
+  final double? border;
+  final bool? sombra;
 
-  const CustomTextFormField({
-    super.key,
-    this.label,
-    this.hint,
-    this.editar = true,
-    this.errorMessage,
-    this.obscureText = false,
-    this.keyboardType = TextInputType.text,
-    this.textEditingController,
-    this.defaultText,
-    this.onChanged,
-    this.validator,
-    this.onSaved,
-    this.icon,
-  });
+  const CustomTextFormField(
+      {super.key,
+      this.label,
+      this.hint,
+      this.editar = true,
+      this.errorMessage,
+      this.obscureText = false,
+      this.keyboardType = TextInputType.text,
+      this.textEditingController,
+      this.defaultText,
+      this.onChanged,
+      this.validator,
+      this.onSaved,
+      this.icon,
+      this.border,
+      this.sombra = true});
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
@@ -60,69 +63,67 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     final colors = Theme.of(context).colorScheme;
 
     final border = OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.transparent),
-        borderRadius: BorderRadius.circular(40));
+        borderSide: BorderSide(
+            color: widget.sombra! ? Colors.transparent : Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(widget.border ?? 40));
 
-    const borderRadius = Radius.circular(30);
+    final borderRadius = Radius.circular(widget.border ?? 30);
 
     return Container(
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: const BorderRadius.all(borderRadius),
+            borderRadius: BorderRadius.all(borderRadius),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: widget.sombra!
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.white.withOpacity(0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 5))
             ]),
         child: Row(children: [
-          Padding(
-              padding: EdgeInsets.only(left: 10.rw(context)),
-              child: widget.icon ?? const SizedBox(width: 0)),
+          widget.icon ?? const SizedBox(width: 0),
           Expanded(
-              child: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: TextFormField(
-                enabled: widget.editar,
-                onSaved: widget.onSaved,
-                onChanged: widget.onChanged,
-                validator: widget.validator,
-                obscureText: _obscureText,
-                keyboardType: widget.keyboardType,
-                style: TextStyle(
-                    fontSize: 14.rf(context),
-                    color: Colors.black54,
-                    overflow: TextOverflow.ellipsis),
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    floatingLabelStyle: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.rf(context)),
-                    enabledBorder: border,
-                    focusedBorder: border,
-                    errorBorder: border.copyWith(
-                        borderSide:
-                            const BorderSide(color: Colors.transparent)),
-                    focusedErrorBorder: border.copyWith(
-                        borderSide:
-                            const BorderSide(color: Colors.transparent)),
-                    isDense: true,
-                    label: widget.label != null
-                        ? Text(
-                            widget.label!,
-                            style: TextStyle(fontSize: 14.rf(context)),
-                          )
-                        : null,
-                    hintText: widget.hint,
-                    hintStyle: TextStyle(
-                        fontSize: 12.rf(context),
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w300),
-                    errorText: widget.errorMessage,
-                    focusColor: colors.primary)),
-          )),
+              child: TextFormField(
+                  enabled: widget.editar,
+                  onSaved: widget.onSaved,
+                  onChanged: widget.onChanged,
+                  validator: widget.validator,
+                  obscureText: _obscureText,
+                  keyboardType: widget.keyboardType,
+                  style: TextStyle(
+                      fontSize: 14.rf(context),
+                      color: Colors.black54,
+                      overflow: TextOverflow.ellipsis),
+                  controller: _textEditingController,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      floatingLabelStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.rf(context)),
+                      enabledBorder: border,
+                      focusedBorder: border,
+                      errorBorder: border.copyWith(
+                          borderSide:
+                              const BorderSide(color: Colors.transparent)),
+                      focusedErrorBorder: border.copyWith(
+                          borderSide:
+                              const BorderSide(color: Colors.transparent)),
+                      isDense: true,
+                      label: widget.label != null
+                          ? Text(
+                              widget.label!,
+                              style: TextStyle(fontSize: 14.rf(context)),
+                            )
+                          : null,
+                      hintText: widget.hint,
+                      hintStyle: TextStyle(
+                          fontSize: 12.rf(context),
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w300),
+                      errorText: widget.errorMessage,
+                      focusColor: colors.primary))),
           if (widget.obscureText)
             GestureDetector(
                 onTap: () {
