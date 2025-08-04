@@ -23,10 +23,10 @@ class CustomPersistentNavBar extends StatelessWidget {
           inactiveColorPrimary: Colors.grey,
           iconSize: 35),
       PersistentBottomNavBarItem(
-          icon: const Icon(FlutterIcons.credit_card_alt_faw),
+          icon: const Icon(Icons.list_alt_rounded),
           activeColorPrimary: primaryColor,
           inactiveColorPrimary: Colors.grey,
-          iconSize: 28),
+          iconSize: 40),
       PersistentBottomNavBarItem(
         icon: const Icon(FlutterIcons.qrcode_scan_mco, color: Colors.white),
         activeColorPrimary: primaryColor,

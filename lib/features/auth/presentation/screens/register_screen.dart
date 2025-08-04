@@ -47,6 +47,11 @@ class _RegisterForm extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         backgroundColor: primaryColor,
+        leading: IconButton(
+          icon:
+              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
