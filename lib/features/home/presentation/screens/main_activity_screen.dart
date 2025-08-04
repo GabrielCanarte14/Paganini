@@ -24,8 +24,10 @@ class _HMainActivityScreenState extends State<MainActivityScreen> {
   }
 
   List<Widget> _buildScreens() {
-    return const [
-      HomeScreen(),
+    return [
+      HomeScreen(
+        controller: _controller,
+      ),
       HistoryScreen(),
       QrScreen(),
       PaymentsMethodsScreen(),

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class RecentTransactionsWidget extends StatelessWidget {
-  const RecentTransactionsWidget({super.key});
+  final PersistentTabController controller;
+
+  const RecentTransactionsWidget({
+    super.key,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +35,15 @@ class RecentTransactionsWidget extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text('Transacciones recientes',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Text('Ver todas', style: TextStyle(color: primaryColor)),
+            TextButton(
+              onPressed: () {
+                controller.jumpToTab(1);
+              },
+              child: Text('Ver todas', style: TextStyle(color: primaryColor)),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -51,7 +62,7 @@ class RecentTransactionsWidget extends StatelessWidget {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

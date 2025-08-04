@@ -1,9 +1,15 @@
 import 'package:awesome_card/awesome_card.dart';
 import 'package:flutter/material.dart';
 import 'package:paganini_wallet/core/constants/constants.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class PaymentMethodsWidget extends StatelessWidget {
-  const PaymentMethodsWidget({super.key});
+  final PersistentTabController controller;
+
+  const PaymentMethodsWidget({
+    super.key,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +18,15 @@ class PaymentMethodsWidget extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text('Tus tarjetas',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            Text('Ver todas', style: TextStyle(color: primaryColor)),
+            TextButton(
+              onPressed: () {
+                controller.jumpToTab(3);
+              },
+              child: Text('Ver todas', style: TextStyle(color: primaryColor)),
+            ),
           ],
         ),
         const SizedBox(height: 12),
