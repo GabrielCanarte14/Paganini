@@ -41,12 +41,17 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, Unit>?> logout() async {
     try {
-      final token = await keyValueStorageService.getValue<String>('token');
-      if (token != null && token != '') {
-        await authRemoteDataSource.logout();
-      }
-
       return const Right(unit);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(errorMessage: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>?> forgotPassword(String email) async {
+    try {
+      final codigo = await authRemoteDataSource.forgotPassword(email);
+      return Right(codigo);
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.message));
     }

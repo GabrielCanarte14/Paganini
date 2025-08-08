@@ -39,6 +39,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Login(sl()));
   sl.registerLazySingleton(() => Logout(sl()));
   sl.registerLazySingleton(() => RegisterUser(sl()));
+  sl.registerLazySingleton(() => ForgotPasswordUseCase(sl()));
   sl.registerLazySingleton(() => KeyValueStorageServiceImpl());
 
   //! Auth
@@ -46,6 +47,7 @@ Future<void> init() async {
       loginUseCase: sl(),
       logoutUseCase: sl(),
       registerUserUseCase: sl(),
+      forgotPasswordUseCase: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
 
   sl.registerLazySingleton(() => LoginFormCubit());

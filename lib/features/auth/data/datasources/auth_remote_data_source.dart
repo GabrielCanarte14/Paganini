@@ -7,7 +7,7 @@ abstract class AuthRemoteDataSource {
   Future<void> login(String username, String password);
   Future<String> registerUser(String name, String lastname, String email,
       String phone, String password);
-  Future<void> logout();
+  Future<String> forgotPassword(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -61,8 +61,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<String> forgotPassword(String email) async {
+    try {
+      final result =
+          await _client.post(forgotPasswordUrl, data: {'correo': email});
+      if (result.statusCode != 200) {
+        throw ServerException(message: 'No se ha podido enviar el codigo');
+      }
+      return result.data['message'];
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 }

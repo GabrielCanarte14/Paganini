@@ -6,6 +6,7 @@ import 'package:paganini_wallet/core/constants/constants.dart';
 import 'package:paganini_wallet/core/theme/theme.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/login_form_cubit.dart';
+import 'package:paganini_wallet/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:paganini_wallet/features/auth/presentation/widgets/widgets.dart';
 import 'package:paganini_wallet/features/shared/widgets/custom_buttom_2.dart';
 import 'package:paganini_wallet/features/shared/widgets/widgets.dart';
@@ -142,7 +143,13 @@ class _LoginForm extends StatelessWidget {
                                 ),
                           SizedBox(height: 20.rh(context)),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
                             child: const Text(
                               "¿Olvidaste tu clave?",
                               style: TextStyle(

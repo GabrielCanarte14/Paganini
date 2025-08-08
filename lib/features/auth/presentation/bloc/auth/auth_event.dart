@@ -53,6 +53,12 @@ class RegisterEvent extends AuthEvent {
       required this.password});
 }
 
+class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  const ForgotPasswordEvent({required this.email});
+}
+
 class CheckAuthStatusEvent extends AuthEvent {}
 
 class AuthErrorEvent extends AuthEvent {

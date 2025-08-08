@@ -38,23 +38,22 @@ class _RegisterForm extends StatelessWidget {
     final textStyles = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 25,
-        centerTitle: false,
-        title: Text(
-          'Crear cuenta',
-          style: textStyles.titleMedium!.copyWith(color: Colors.white),
-          overflow: TextOverflow.ellipsis,
+        appBar: AppBar(
+          titleSpacing: 25,
+          centerTitle: false,
+          title: Text(
+            'Crear cuenta',
+            style: textStyles.titleMedium!.copyWith(color: Colors.white),
+            overflow: TextOverflow.ellipsis,
+          ),
+          backgroundColor: primaryColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-        backgroundColor: primaryColor,
-        leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
+        body: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
           if (state is UserError) {
             showSnackbar(context, state.message);
           }
@@ -63,16 +62,14 @@ class _RegisterForm extends StatelessWidget {
               Overlay.of(context),
               CustomSnackBar.success(message: state.mensaje),
             );
-            Navigator.pop(context); // Volver al login tras éxito
+            Navigator.pop(context);
           }
-        },
-        builder: (context, state) {
+        }, builder: (context, state) {
           final checkingRequest = state is Registering;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(25, 30, 25, 20),
-            child: Column(
-              children: [
+              padding: const EdgeInsets.fromLTRB(25, 30, 25, 20),
+              child: Column(children: [
                 const SizedBox(height: 20),
                 const NameInput(),
                 const SizedBox(height: 15),
@@ -113,20 +110,15 @@ class _RegisterForm extends StatelessWidget {
                       ),
                 const SizedBox(height: 20),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "¿Ya tienes cuenta? Inicia sesión",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      "¿Ya tienes cuenta? Inicia sesión",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ))
+              ]));
+        }));
   }
 }

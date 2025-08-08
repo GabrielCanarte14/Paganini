@@ -22,6 +22,14 @@ class Register extends AuthState {
   List<Object> get props => [mensaje];
 }
 
+class Aprovado extends AuthState {
+  final String mensaje;
+  const Aprovado({this.mensaje = ''});
+
+  @override
+  List<Object> get props => [mensaje];
+}
+
 class Authenticated extends AuthState {
   final String mensaje;
 

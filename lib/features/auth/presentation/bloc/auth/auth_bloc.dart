@@ -21,18 +21,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Login loginUseCase;
   final Logout logoutUseCase;
   final RegisterUser registerUserUseCase;
+  final ForgotPasswordUseCase forgotPasswordUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   AuthBloc(
       {required this.loginUseCase,
       required this.logoutUseCase,
       required this.registerUserUseCase,
+      required this.forgotPasswordUseCase,
       required this.keyValueStorageService})
       : super(AuthInitial()) {
     on<LoginEvent>(_onLoginRequested);
     on<LogoutEvent>(_onLogoutRequested);
     on<RegisterEvent>(_onRegisterRequested);
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
+    on<ForgotPasswordEvent>(_onForgotPassword);
   }
 
   Future<void> _onLoginRequested(
@@ -92,6 +95,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       add(LoginEvent(username: username, password: password));
     }
+  }
+
+  Future<void> _onForgotPassword(
+      ForgotPasswordEvent event, Emitter<AuthState> emit) async {
+    emit(Checking());
+    final failureOrUser =
+        await forgotPasswordUseCase(ForgotParams(email: event.email));
+    failureOrUser?.fold(
+      (failure) {
+        emit(UserError(message: failure.errorMessage));
+      },
+      (mensaje) {
+        emit(Aprovado(mensaje: mensaje));
+      },
+    );
   }
 
   String _mapFailureToMessage(Failure failure) {
