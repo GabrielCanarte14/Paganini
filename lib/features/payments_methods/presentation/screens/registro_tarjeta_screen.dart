@@ -1,7 +1,7 @@
-import 'package:awesome_card/awesome_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:go_router/go_router.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/features/shared/widgets/custom_buttom_2.dart';
@@ -14,7 +14,7 @@ class RegistroTarjetaScreen extends StatefulWidget {
 }
 
 class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
-  String cardNumber = 'XXXX XXXX XXXX XXXX';
+  String cardNumber = '';
   String cardHolder = 'Propietario';
   String expiryDate = '';
   String cvv = '';
@@ -39,6 +39,16 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
     super.dispose();
   }
 
+  String _formatCardNumber(String input) {
+    final digits = input.replaceAll(RegExp(r'\D'), '');
+    final chunks = <String>[];
+    for (var i = 0; i < digits.length; i += 4) {
+      final end = (i + 4 < digits.length) ? i + 4 : digits.length;
+      chunks.add(digits.substring(i, end));
+    }
+    return chunks.join(' ');
+  }
+
   void _showExpiryPicker() {
     int selectedMonth = 0;
     int selectedYear = 0;
@@ -47,35 +57,29 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-          height: 250,
-          child: Column(
-            children: [
+            height: 250,
+            child: Column(children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32.0,
-                        scrollController: FixedExtentScrollController(
-                            initialItem: selectedMonth),
-                        onSelectedItemChanged: (index) => selectedMonth = index,
-                        children:
-                            months.map((m) => Center(child: Text(m))).toList(),
-                      ),
-                    ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32.0,
-                        scrollController: FixedExtentScrollController(
-                            initialItem: selectedYear),
-                        onSelectedItemChanged: (index) => selectedYear = index,
-                        children:
-                            years.map((y) => Center(child: Text(y))).toList(),
-                      ),
-                    ),
-                  ],
+                  child: Row(children: [
+                Expanded(
+                  child: CupertinoPicker(
+                    itemExtent: 32.0,
+                    scrollController:
+                        FixedExtentScrollController(initialItem: selectedMonth),
+                    onSelectedItemChanged: (index) => selectedMonth = index,
+                    children:
+                        months.map((m) => Center(child: Text(m))).toList(),
+                  ),
                 ),
-              ),
+                Expanded(
+                    child: CupertinoPicker(
+                  itemExtent: 32.0,
+                  scrollController:
+                      FixedExtentScrollController(initialItem: selectedYear),
+                  onSelectedItemChanged: (index) => selectedYear = index,
+                  children: years.map((y) => Center(child: Text(y))).toList(),
+                ))
+              ])),
               TextButton(
                 onPressed: () {
                   final selected =
@@ -86,9 +90,7 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
                 },
                 child: const Text('Aceptar'),
               ),
-            ],
-          ),
-        );
+            ]));
       },
     );
   }
@@ -100,13 +102,14 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
       appBar: AppBar(
         titleSpacing: 25,
         centerTitle: false,
-        title: Text('Vincular tarjeta',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.white),
-            overflow: TextOverflow.ellipsis),
+        title: Text(
+          'Vincular tarjeta',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.white),
+          overflow: TextOverflow.ellipsis,
+        ),
         backgroundColor: primaryColor,
         leading: IconButton(
           icon:
@@ -118,17 +121,17 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
           children: [
-            CreditCard(
+            CreditCardWidget(
               cardNumber: cardNumber,
-              cardExpiry: expiryDate,
+              expiryDate: expiryDate,
               cardHolderName: cardHolder,
-              cvv: cvv,
-              bankName: 'Tu Banco',
-              cardType: CardType.masterCard,
-              showBackSide: showBack,
-              frontBackground: CardBackgrounds.black,
-              backBackground: CardBackgrounds.white,
-              showShadow: true,
+              cvvCode: cvv,
+              showBackView: showBack,
+              isHolderNameVisible: true,
+              obscureCardCvv: true,
+              obscureCardNumber: true,
+              cardBgColor: Colors.black,
+              onCreditCardWidgetChange: (brand) {},
             ),
             const SizedBox(height: 60),
             _buildTextField(
@@ -136,7 +139,7 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
               label: 'Nombre',
               onChanged: (value) => setState(() => cardHolder = value),
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
               ],
             ),
             const SizedBox(height: 15),
@@ -144,10 +147,19 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
               controller: numberController,
               label: 'Número de la tarjeta',
               keyboardType: TextInputType.number,
-              onChanged: (value) => setState(() => cardNumber = value),
+              onChanged: (value) {
+                final formatted = _formatCardNumber(value);
+                final sel = numberController.selection;
+                setState(() => cardNumber = formatted);
+                numberController.value = TextEditingValue(
+                  text: formatted,
+                  selection: TextSelection.collapsed(offset: formatted.length),
+                  composing: TextRange.empty,
+                );
+              },
               inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(16),
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                LengthLimitingTextInputFormatter(19),
               ],
             ),
             const SizedBox(height: 15),
@@ -174,7 +186,7 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
                         setState(() => showBack = focused),
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                   ),
                 ),
@@ -188,9 +200,7 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
           child: CustomButtonWidget(
-            onTap: () {
-              context.pop();
-            },
+            onTap: () => context.pop(),
             color: primaryColor,
             label: 'Vincular',
           ),

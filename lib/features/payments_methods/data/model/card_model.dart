@@ -21,7 +21,7 @@ class CardModel extends Card {
       'numeroTarjeta': number,
       'titular': titular,
       'mes': month,
-      'year': year,
+      'year': year
     };
   }
 }
