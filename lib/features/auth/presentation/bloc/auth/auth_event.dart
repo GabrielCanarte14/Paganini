@@ -59,6 +59,18 @@ class ForgotPasswordEvent extends AuthEvent {
   const ForgotPasswordEvent({required this.email});
 }
 
+class ResetPasswordEvent extends AuthEvent {
+  final String email;
+  final String password;
+  final String codigo;
+
+  const ResetPasswordEvent({
+    required this.email,
+    required this.password,
+    required this.codigo,
+  });
+}
+
 class CheckAuthStatusEvent extends AuthEvent {}
 
 class AuthErrorEvent extends AuthEvent {

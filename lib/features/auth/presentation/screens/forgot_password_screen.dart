@@ -81,6 +81,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 20),
                 Text(
                   'Ingresa tu correo electrónico registrado y te enviaremos un código para restablecer tu contraseña.',
                   style: textStyles.bodyMedium!.copyWith(color: Colors.black54),

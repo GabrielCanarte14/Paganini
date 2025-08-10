@@ -30,6 +30,14 @@ class Aprovado extends AuthState {
   List<Object> get props => [mensaje];
 }
 
+class Actualizado extends AuthState {
+  final String mensaje;
+  const Actualizado({this.mensaje = ''});
+
+  @override
+  List<Object> get props => [mensaje];
+}
+
 class Authenticated extends AuthState {
   final String mensaje;
 

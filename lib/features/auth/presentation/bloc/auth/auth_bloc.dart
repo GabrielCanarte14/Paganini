@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Logout logoutUseCase;
   final RegisterUser registerUserUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
+  final ResetPasswordUseCase resetPasswordUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   AuthBloc(
@@ -29,6 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required this.logoutUseCase,
       required this.registerUserUseCase,
       required this.forgotPasswordUseCase,
+      required this.resetPasswordUseCase,
       required this.keyValueStorageService})
       : super(AuthInitial()) {
     on<LoginEvent>(_onLoginRequested);
@@ -36,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<RegisterEvent>(_onRegisterRequested);
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
     on<ForgotPasswordEvent>(_onForgotPassword);
+    on<ResetPasswordEvent>(_onResetPassword);
   }
 
   Future<void> _onLoginRequested(
@@ -100,6 +103,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onForgotPassword(
       ForgotPasswordEvent event, Emitter<AuthState> emit) async {
     emit(Checking());
+    print('Lanzando evento de codigo');
     final failureOrUser =
         await forgotPasswordUseCase(ForgotParams(email: event.email));
     failureOrUser?.fold(
@@ -108,6 +112,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
       (mensaje) {
         emit(Aprovado(mensaje: mensaje));
+      },
+    );
+  }
+
+  Future<void> _onResetPassword(
+      ResetPasswordEvent event, Emitter<AuthState> emit) async {
+    emit(Checking());
+    final failureOrUser = await resetPasswordUseCase(ResetParams(
+        email: event.email, codigo: event.codigo, password: event.password));
+    failureOrUser?.fold(
+      (failure) {
+        emit(UserError(message: failure.errorMessage));
+      },
+      (mensaje) {
+        emit(Actualizado(mensaje: mensaje));
       },
     );
   }

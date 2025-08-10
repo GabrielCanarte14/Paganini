@@ -82,6 +82,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                   offset: const Offset(0, 5))
             ]),
         child: Row(children: [
+          widget.icon != null
+              ? const SizedBox(width: 10)
+              : const SizedBox(width: 0),
           widget.icon ?? const SizedBox(width: 0),
           Expanded(
               child: TextFormField(
