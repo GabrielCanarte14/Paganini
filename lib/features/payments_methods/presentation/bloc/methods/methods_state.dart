@@ -20,6 +20,15 @@ class Complete extends MethodsState {
   List<Object> get props => [metodos];
 }
 
+class Agregado extends MethodsState {
+  final String message;
+
+  const Agregado({this.message = ''});
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class MethodsInitial extends MethodsState {}
 
 class MethodsError extends MethodsState {

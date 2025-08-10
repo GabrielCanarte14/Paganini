@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:paganini_wallet/core/constants/api_constants.dart';
 import 'package:paganini_wallet/core/error/error.dart';
 import 'package:paganini_wallet/features/payments_methods/data/model/models.dart';
@@ -7,6 +6,17 @@ import 'package:paganini_wallet/features/shared/data/services/key_value_storage_
 
 abstract class PaymentMethodsDataSource {
   Future<List<dynamic>> getPaymentMethods(String correo);
+  Future<String> registerPaymentMethod(
+      String number,
+      String titular,
+      int? month,
+      int? year,
+      String? cvv,
+      String tipo,
+      String? red,
+      String tipoMetodo,
+      String? bank,
+      String? identificacion);
 }
 
 class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
@@ -32,7 +42,6 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
           },
         ),
       );
-      print(result);
       if (result.statusCode == 200) {
         final data = result.data as Map<String, dynamic>;
         final cuentas = (data['cuentabanco'] as List?) ?? const [];
@@ -52,6 +61,78 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
       );
     } catch (e) {
       print(e.toString());
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<String> registerPaymentMethod(
+      String number,
+      String titular,
+      int? month,
+      int? year,
+      String? cvv,
+      String tipo,
+      String? red,
+      String tipoMetodo,
+      String? bank,
+      String? identificacion) async {
+    final email = await keyValueStorageService.getValue<String>('email');
+    final rawToken = await keyValueStorageService.getValue<String>('token');
+    final token = rawToken?.trim().replaceAll('\r', '').replaceAll('\n', '');
+    if (token == null || token.isEmpty) {
+      throw TimeoutException();
+    }
+    var cuerpo = {};
+    if (tipoMetodo == 'cuentabanco') {
+      cuerpo = {
+        "correo": email,
+        "tipo": tipoMetodo,
+        "bankAccount": {
+          "nombreBanco": bank,
+          "numeroCuenta": number,
+          "tipoCuenta": tipo,
+          "titular": titular,
+          "identificacion": identificacion
+        }
+      };
+    } else {
+      cuerpo = {
+        "correo": email,
+        "tipo": tipoMetodo,
+        "card": {
+          "numeroTarjeta": number,
+          "titular": titular,
+          "mes": month,
+          "year": year,
+          "cvv": cvv,
+          "tipo": tipo,
+          "red": red
+        }
+      };
+    }
+    try {
+      print(cuerpo);
+      final result = await _client.post(
+        registerPaymentMethodUrl,
+        data: cuerpo,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        ),
+      );
+      print(result);
+      if (result.statusCode == 201) {
+        return 'Su método de pago fue registrado correctamente';
+      }
+      throw ServerException(
+        message: 'HTTP ${result.statusCode}: ${result.statusMessage}',
+      );
+    } catch (e) {
+      print(e);
       throw ServerException(message: e.toString());
     }
   }

@@ -1,4 +1,3 @@
-import 'package:awesome_card/awesome_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
@@ -49,7 +48,7 @@ class _PaymentsMethodsScreenState extends State<PaymentsMethodsScreen> {
                 backgroundColor: Colors.transparent,
                 isScrollControlled: true,
                 useRootNavigator: true,
-                builder: (context) => const AddMethodModal(),
+                builder: (context) => AddMethodModal(email: widget.email),
               );
             },
           ),

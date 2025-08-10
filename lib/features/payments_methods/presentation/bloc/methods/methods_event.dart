@@ -17,3 +17,22 @@ class GetMethodsEvent extends MethodsEvent {
   @override
   List<Object> get props => [email];
 }
+
+class RegisterCardEvent extends MethodsEvent {
+  final String number;
+  final String titular;
+  final int month;
+  final int year;
+  final String cvv;
+  final String type;
+  final String red;
+
+  const RegisterCardEvent(
+      {required this.number,
+      required this.titular,
+      required this.month,
+      required this.year,
+      required this.cvv,
+      required this.type,
+      required this.red});
+}

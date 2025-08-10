@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/features/shared/widgets/custom_buttom_2.dart';
+import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class RegistroTarjetaScreen extends StatefulWidget {
-  const RegistroTarjetaScreen({super.key});
+  final String email;
+  const RegistroTarjetaScreen({required this.email, super.key});
 
   @override
   State<RegistroTarjetaScreen> createState() => _RegistroTarjetaScreenState();
@@ -19,6 +24,7 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
   String expiryDate = '';
   String cvv = '';
   bool showBack = false;
+  String? network;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
@@ -57,29 +63,35 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-            height: 250,
-            child: Column(children: [
+          height: 250,
+          child: Column(
+            children: [
               Expanded(
-                  child: Row(children: [
-                Expanded(
-                  child: CupertinoPicker(
-                    itemExtent: 32.0,
-                    scrollController:
-                        FixedExtentScrollController(initialItem: selectedMonth),
-                    onSelectedItemChanged: (index) => selectedMonth = index,
-                    children:
-                        months.map((m) => Center(child: Text(m))).toList(),
-                  ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CupertinoPicker(
+                        itemExtent: 32.0,
+                        scrollController: FixedExtentScrollController(
+                            initialItem: selectedMonth),
+                        onSelectedItemChanged: (index) => selectedMonth = index,
+                        children:
+                            months.map((m) => Center(child: Text(m))).toList(),
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoPicker(
+                        itemExtent: 32.0,
+                        scrollController: FixedExtentScrollController(
+                            initialItem: selectedYear),
+                        onSelectedItemChanged: (index) => selectedYear = index,
+                        children:
+                            years.map((y) => Center(child: Text(y))).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                    child: CupertinoPicker(
-                  itemExtent: 32.0,
-                  scrollController:
-                      FixedExtentScrollController(initialItem: selectedYear),
-                  onSelectedItemChanged: (index) => selectedYear = index,
-                  children: years.map((y) => Center(child: Text(y))).toList(),
-                ))
-              ])),
+              ),
               TextButton(
                 onPressed: () {
                   final selected =
@@ -90,13 +102,64 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
                 },
                 child: const Text('Aceptar'),
               ),
-            ]));
+            ],
+          ),
+        );
       },
     );
   }
 
+  void _submit() {
+    final numberDigits = cardNumber.replaceAll(' ', '');
+    if (numberDigits.length < 13) {
+      _toastError('Número de tarjeta inválido');
+      return;
+    }
+    if (cardHolder.trim().isEmpty) {
+      _toastError('Ingresa el nombre del titular');
+      return;
+    }
+    if (expiryDate.isEmpty || !expiryDate.contains('/')) {
+      _toastError('Selecciona el vencimiento');
+      return;
+    }
+    if (cvv.length < 3) {
+      _toastError('CVV inválido');
+      return;
+    }
+
+    final parts = expiryDate.split('/');
+    final month = parts[0];
+    final yy = parts[1];
+    final year = yy.length == 2 ? '20$yy' : yy;
+
+    final type = 'C';
+    final red = (network ?? '').toUpperCase();
+
+    context.read<MethodsBloc>().add(
+          RegisterCardEvent(
+            number: numberDigits,
+            titular: cardHolder.trim(),
+            month: int.parse(month),
+            year: int.parse(year),
+            cvv: cvv,
+            type: type,
+            red: red,
+          ),
+        );
+  }
+
+  void _toast(String msg) {
+    showTopSnackBar(Overlay.of(context), CustomSnackBar.success(message: msg));
+  }
+
+  void _toastError(String msg) {
+    showTopSnackBar(Overlay.of(context), CustomSnackBar.error(message: msg));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       extendBody: false,
       appBar: AppBar(
@@ -117,92 +180,142 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
-        child: Column(
-          children: [
-            CreditCardWidget(
-              cardNumber: cardNumber,
-              expiryDate: expiryDate,
-              cardHolderName: cardHolder,
-              cvvCode: cvv,
-              showBackView: showBack,
-              isHolderNameVisible: true,
-              obscureCardCvv: true,
-              obscureCardNumber: true,
-              cardBgColor: Colors.black,
-              onCreditCardWidgetChange: (brand) {},
-            ),
-            const SizedBox(height: 60),
-            _buildTextField(
-              controller: nameController,
-              label: 'Nombre',
-              onChanged: (value) => setState(() => cardHolder = value),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]'))
-              ],
-            ),
-            const SizedBox(height: 15),
-            _buildTextField(
-              controller: numberController,
-              label: 'Número de la tarjeta',
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                final formatted = _formatCardNumber(value);
-                final sel = numberController.selection;
-                setState(() => cardNumber = formatted);
-                numberController.value = TextEditingValue(
-                  text: formatted,
-                  selection: TextSelection.collapsed(offset: formatted.length),
-                  composing: TextRange.empty,
-                );
-              },
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                LengthLimitingTextInputFormatter(19),
-              ],
-            ),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTextField(
-                    controller: expiryController,
-                    label: 'Vencimiento',
-                    keyboardType: TextInputType.none,
-                    readOnly: true,
-                    onChanged: (_) {},
-                    onTap: _showExpiryPicker,
-                  ),
+      body: BlocConsumer<MethodsBloc, MethodsState>(
+        listener: (context, state) {
+          if (state is MethodsError) {
+            _toastError(state.message);
+          }
+          if (state is Agregado) {
+            _toast(state.message);
+            context
+                .read<MethodsBloc>()
+                .add(GetMethodsEvent(email: widget.email));
+            context.pop();
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is Checking;
+
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+                child: Column(
+                  children: [
+                    CreditCardWidget(
+                      cardNumber: cardNumber,
+                      expiryDate: expiryDate,
+                      cardHolderName: cardHolder,
+                      cvvCode: cvv,
+                      showBackView: showBack,
+                      isHolderNameVisible: true,
+                      obscureCardCvv: true,
+                      obscureCardNumber: true,
+                      cardBgColor: Colors.black,
+                      onCreditCardWidgetChange: (brand) {
+                        final newNetwork = _mapBrandToNetwork(brand);
+                        if (network != newNetwork) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (!mounted) return;
+                            setState(() => network = newNetwork);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 60),
+                    _buildTextField(
+                      controller: nameController,
+                      label: 'Nombre',
+                      onChanged: (v) => setState(() => cardHolder = v),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z\s]')),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    _buildTextField(
+                      controller: numberController,
+                      label: 'Número de la tarjeta',
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        final formatted = _formatCardNumber(value);
+                        setState(() => cardNumber = formatted);
+                        numberController.value = TextEditingValue(
+                          text: formatted,
+                          selection:
+                              TextSelection.collapsed(offset: formatted.length),
+                          composing: TextRange.empty,
+                        );
+                      },
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                        LengthLimitingTextInputFormatter(19),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            controller: expiryController,
+                            label: 'Vencimiento',
+                            keyboardType: TextInputType.none,
+                            readOnly: true,
+                            onChanged: (_) {},
+                            onTap: _showExpiryPicker,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildTextField(
+                            controller: cvvController,
+                            label: 'CVV',
+                            keyboardType: TextInputType.number,
+                            onChanged: (v) => setState(() => cvv = v),
+                            onFocusChange: (focused) =>
+                                setState(() => showBack = focused),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    if (network != null && network!.isNotEmpty)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Red detectada: $network',
+                            style: textTheme.bodySmall
+                                ?.copyWith(color: Colors.black54)),
+                      ),
+                    const SizedBox(height: 80),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildTextField(
-                    controller: cvvController,
-                    label: 'CVV',
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) => setState(() => cvv = value),
-                    onFocusChange: (focused) =>
-                        setState(() => showBack = focused),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                  ),
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.15),
+                  child: const Center(child: CircularProgressIndicator()),
                 ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: SafeArea(
         bottom: true,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-          child: CustomButtonWidget(
-            onTap: () => context.pop(),
-            color: primaryColor,
-            label: 'Vincular',
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 12),
+          child: BlocBuilder<MethodsBloc, MethodsState>(
+            builder: (context, state) {
+              final isLoading = state is Checking;
+              return CustomButtonWidget(
+                onTap: isLoading ? () {} : _submit,
+                color: primaryColor,
+                label: isLoading ? 'Guardando…' : 'Vincular',
+              );
+            },
           ),
         ),
       ),
@@ -236,5 +349,18 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
         onTap: onTap,
       ),
     );
+  }
+
+  String _mapBrandToNetwork(CreditCardBrand brand) {
+    switch (brand.brandName) {
+      case CardType.visa:
+        return 'VISA';
+      case CardType.mastercard:
+        return 'MASTERCARD';
+      case CardType.americanExpress:
+        return 'AMEX';
+      default:
+        return 'VISA';
+    }
   }
 }

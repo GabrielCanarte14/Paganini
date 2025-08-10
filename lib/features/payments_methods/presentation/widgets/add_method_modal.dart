@@ -5,7 +5,8 @@ import 'package:paganini_wallet/features/payments_methods/presentation/screens/e
 import 'package:paganini_wallet/features/payments_methods/presentation/screens/registro_tarjeta_screen.dart';
 
 class AddMethodModal extends StatelessWidget {
-  const AddMethodModal({super.key});
+  final String email;
+  const AddMethodModal({required this.email, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class AddMethodModal extends StatelessWidget {
                 context.pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const RegistroTarjetaScreen(),
+                    builder: (_) => RegistroTarjetaScreen(email: email),
                   ),
                 );
               },

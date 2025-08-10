@@ -25,4 +25,25 @@ class PaymentMethodsRepositoryImpl implements PaymentMethodsRepository {
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> registerBankAccount(String bank,
+      String number, String type, String titular, String identificacion) async {
+    // TODO: implement registerBankAccount
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, String>> registerCard(String number, String titular,
+      int month, int year, String cvv, String tipo, String red) async {
+    try {
+      final mensaje = await paymentMethodsDataSource.registerPaymentMethod(
+          number, titular, month, year, cvv, tipo, red, 'tarjeta', null, null);
+      return Right(mensaje);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
 }

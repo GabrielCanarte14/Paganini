@@ -2,6 +2,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_card.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../shared/data/services/services.dart';
 import '../../../domain/usecases/usecases.dart';
@@ -14,12 +15,16 @@ const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 
 class MethodsBloc extends Bloc<MethodsEvent, MethodsState> {
   final GetMethods getMethodsUseCase;
+  final RegisterCard registerCardUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   MethodsBloc(
-      {required this.getMethodsUseCase, required this.keyValueStorageService})
+      {required this.getMethodsUseCase,
+      required this.registerCardUseCase,
+      required this.keyValueStorageService})
       : super(MethodsInitial()) {
     on<GetMethodsEvent>(_onGetMethodsRequested);
+    on<RegisterCardEvent>(_onRegisterCard);
   }
 
   Future<void> _onGetMethodsRequested(
@@ -31,6 +36,25 @@ class MethodsBloc extends Bloc<MethodsEvent, MethodsState> {
       emit(MethodsError(message: _mapFailureToMessage(failure)));
     }, (metodos) async {
       emit(Complete(metodos: metodos));
+    });
+  }
+
+  Future<void> _onRegisterCard(
+      RegisterCardEvent event, Emitter<MethodsState> emit) async {
+    emit(Checking());
+    print('enviando datos');
+    final failureOrMessage = await registerCardUseCase(CardParams(
+        number: event.number,
+        titular: event.titular,
+        month: event.month,
+        year: event.year,
+        cvv: event.cvv,
+        type: event.type,
+        red: event.red));
+    await failureOrMessage.fold((failure) {
+      emit(MethodsError(message: _mapFailureToMessage(failure)));
+    }, (message) async {
+      emit(Agregado(message: message));
     });
   }
 
