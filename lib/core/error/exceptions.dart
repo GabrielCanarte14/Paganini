@@ -10,6 +10,8 @@ class NetworkException implements Exception {}
 
 class CacheException implements Exception {}
 
+class TimeoutException implements Exception {}
+
 class GraphQLException implements ServerException {
   @override
   final String message;

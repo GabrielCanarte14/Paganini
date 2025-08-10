@@ -32,6 +32,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'token', result.data['accessToken'].toString());
         await keyValueStorageService.setKeyValue(
             'refreshToken', result.data['refreshToken'].toString());
+        await keyValueStorageService.setKeyValue('email', username);
       }
     } catch (e) {
       throw ServerException(message: e.toString());

@@ -12,8 +12,8 @@ class CardModel extends Card {
     return CardModel(
         number: json['numeroTarjeta'],
         titular: json['titular'],
-        month: json['mes'],
-        year: json['year']);
+        month: json['mes'].toString(),
+        year: json['year'].toString());
   }
 
   Json toJson() {
