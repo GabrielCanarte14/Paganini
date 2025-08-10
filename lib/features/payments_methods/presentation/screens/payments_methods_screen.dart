@@ -48,11 +48,7 @@ class PaymentsMethodsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        children: [
-          _buildCard(context: context),
-          const SizedBox(height: 20),
-          _buildCard(context: context),
-        ],
+        children: [],
       ),
     );
   }

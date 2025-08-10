@@ -56,7 +56,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return result.data['message'];
     } catch (e) {
-      print('Error: $e');
       throw ServerException(message: e.toString());
     }
   }
@@ -64,16 +63,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<String> forgotPassword(String email) async {
     try {
-      print('Iniciando consultado para enviar codigo');
       final result =
           await _client.post(forgotPasswordUrl, data: {'correo': email});
-      print(result);
       if (result.statusCode != 200) {
         throw ServerException(message: 'No se ha podido enviar el codigo');
       }
       return result.data['message'];
     } catch (e) {
-      print(e.toString());
       throw ServerException(message: e.toString());
     }
   }

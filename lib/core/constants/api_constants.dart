@@ -8,3 +8,4 @@ final loginUrl = "${apiUrl}auth/login";
 final registerUserUrl = '${apiUrl}auth/signup';
 final forgotPasswordUrl = '${apiUrl}auth/forgot-password';
 final resetPasswordUrl = '${apiUrl}auth/confirm-forgot-password';
+final getPaymentMethods = '${apiUrl}payment-methods/by-user';
