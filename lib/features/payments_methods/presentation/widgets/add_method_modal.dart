@@ -33,7 +33,8 @@ class AddMethodModal extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const SeleccionEntidadBancariaScreen(),
+                    builder: (_) =>
+                        SeleccionEntidadBancariaScreen(email: email),
                   ),
                 );
               },

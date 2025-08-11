@@ -29,8 +29,24 @@ class PaymentMethodsRepositoryImpl implements PaymentMethodsRepository {
   @override
   Future<Either<Failure, String>> registerBankAccount(String bank,
       String number, String type, String titular, String identificacion) async {
-    // TODO: implement registerBankAccount
-    throw UnimplementedError();
+    try {
+      final mensaje = await paymentMethodsDataSource.registerPaymentMethod(
+          number,
+          titular,
+          null,
+          null,
+          null,
+          type,
+          null,
+          'cuentabanco',
+          bank,
+          identificacion);
+      return Right(mensaje);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
   }
 
   @override
@@ -39,6 +55,18 @@ class PaymentMethodsRepositoryImpl implements PaymentMethodsRepository {
     try {
       final mensaje = await paymentMethodsDataSource.registerPaymentMethod(
           number, titular, month, year, cvv, tipo, red, 'tarjeta', null, null);
+      return Right(mensaje);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deletePaymentMethod(int id) async {
+    try {
+      final mensaje = await paymentMethodsDataSource.deletePaymentMethod(id);
       return Right(mensaje);
     } on ServerException catch (e) {
       return Left(DioFailure(errorMessage: e.message));

@@ -17,6 +17,7 @@ abstract class PaymentMethodsDataSource {
       String tipoMetodo,
       String? bank,
       String? identificacion);
+  Future<String> deletePaymentMethod(int id);
 }
 
 class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
@@ -133,6 +134,34 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
       );
     } catch (e) {
       print(e);
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<String> deletePaymentMethod(int id) async {
+    final rawToken = await keyValueStorageService.getValue<String>('token');
+    final token = rawToken?.trim().replaceAll('\r', '').replaceAll('\n', '');
+    if (token == null || token.isEmpty) {
+      throw TimeoutException();
+    }
+    try {
+      final result = await _client.delete(
+        '$deletePaymentMethodUrl$id',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        ),
+      );
+      if (result.statusCode == 204) {
+        return 'Método de pago eliminado correctamente';
+      }
+      throw ServerException(
+          message: 'HTTP ${result.statusCode}: ${result.statusMessage}');
+    } catch (e) {
       throw ServerException(message: e.toString());
     }
   }

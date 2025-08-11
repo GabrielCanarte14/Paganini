@@ -36,3 +36,24 @@ class RegisterCardEvent extends MethodsEvent {
       required this.type,
       required this.red});
 }
+
+class RegisterBankEvent extends MethodsEvent {
+  final String number;
+  final String titular;
+  final String type;
+  final String bank;
+  final String identificacion;
+
+  const RegisterBankEvent(
+      {required this.number,
+      required this.titular,
+      required this.type,
+      required this.bank,
+      required this.identificacion});
+}
+
+class DeletePaymentEvent extends MethodsEvent {
+  final int id;
+
+  const DeletePaymentEvent({required this.id});
+}

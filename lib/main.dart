@@ -32,10 +32,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (_) => di.sl<AuthBloc>()..add(CheckAuthStatusEvent()),
+          ),
           BlocProvider(create: (context) => di.sl<AuthBloc>()),
           BlocProvider(create: (context) => di.sl<LoginFormCubit>()),
           BlocProvider(create: (context) => di.sl<RegisterFormCubit>()),
-          BlocProvider(create: (context) => di.sl<MethodsBloc>()),
         ],
         child: MaterialApp.router(
             routeInformationParser: appRouter.routeInformationParser,

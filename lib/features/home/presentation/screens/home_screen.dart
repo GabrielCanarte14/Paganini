@@ -19,9 +19,9 @@ class HomeScreen extends StatelessWidget {
               WelcomeMessageWidget(),
               SizedBox(height: 30),
               BalanceCardWidget(),
-              SizedBox(height: 30),
+              SizedBox(height: 20),
               PaymentMethodsWidget(controller: controller),
-              SizedBox(height: 30),
+              SizedBox(height: 10),
               RecentTransactionsWidget(controller: controller)
             ],
           ),

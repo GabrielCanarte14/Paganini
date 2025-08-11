@@ -3,13 +3,15 @@ import 'package:paganini_wallet/features/payments_methods/domain/entities/entiti
 
 class CardModel extends Card {
   const CardModel(
-      {required super.number,
+      {required super.id,
+      required super.number,
       required super.titular,
       required super.month,
       required super.year});
 
   factory CardModel.fromJson(Json json) {
     return CardModel(
+        id: json['id'],
         number: json['numeroTarjeta'],
         titular: json['titular'],
         month: json['mes'].toString(),
@@ -18,6 +20,7 @@ class CardModel extends Card {
 
   Json toJson() {
     return {
+      'id': id,
       'numeroTarjeta': number,
       'titular': titular,
       'mes': month,

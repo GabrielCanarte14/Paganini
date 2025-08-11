@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+
 import 'package:paganini_wallet/features/history/presentation/screens/history_screen.dart';
 import 'package:paganini_wallet/features/home/presentation/screens/home_screen.dart';
+import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/screens/payments_methods_screen.dart';
 import 'package:paganini_wallet/features/qr/presentation/screens/qr_screen.dart';
 import 'package:paganini_wallet/features/shared/widgets/widgets.dart';
@@ -19,13 +22,15 @@ class MainActivityScreen extends StatefulWidget {
 }
 
 class _MainActivityScreenState extends State<MainActivityScreen> {
-  late PersistentTabController _controller;
+  late final PersistentTabController _controller;
+  late final MethodsBloc _methodsBloc;
   String? _email;
 
   @override
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: 0);
+    _methodsBloc = getIt<MethodsBloc>();
     _loadEmail();
   }
 
@@ -33,16 +38,29 @@ class _MainActivityScreenState extends State<MainActivityScreen> {
     final storage = getIt<KeyValueStorageServiceImpl>();
     final email = await storage.getValue<String>('email');
     setState(() => _email = email);
+    if (email != null && email.isNotEmpty) {
+      _methodsBloc.add(GetMethodsEvent(email: email));
+    }
+  }
+
+  @override
+  void dispose() {
+    _methodsBloc.close();
+    super.dispose();
   }
 
   List<Widget> _buildScreens() {
     return [
-      HomeScreen(controller: _controller),
+      BlocProvider.value(
+        value: _methodsBloc,
+        child: HomeScreen(controller: _controller),
+      ),
       const HistoryScreen(),
       const QrScreen(),
-      _email == null
-          ? const Center(child: CircularProgressIndicator())
-          : PaymentsMethodsScreen(email: _email!),
+      BlocProvider.value(
+        value: _methodsBloc,
+        child: PaymentsMethodsScreen(email: _email!),
+      ),
       const UserScreen(),
     ];
   }
@@ -55,10 +73,13 @@ class _MainActivityScreenState extends State<MainActivityScreen> {
       );
     }
 
-    return CustomPersistentNavBar(
-      context: context,
-      controller: _controller,
-      screens: _buildScreens(),
+    return BlocProvider.value(
+      value: _methodsBloc,
+      child: CustomPersistentNavBar(
+        context: context,
+        controller: _controller,
+        screens: _buildScreens(),
+      ),
     );
   }
 }

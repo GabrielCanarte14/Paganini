@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:paganini_wallet/core/constants/typedefs.dart';
 
 class BankAccount extends Equatable {
+  final int id;
   final String bank;
   final String number;
   final AccountType tipo;
@@ -9,7 +10,8 @@ class BankAccount extends Equatable {
   final String identificacion;
 
   const BankAccount(
-      {required this.number,
+      {required this.id,
+      required this.number,
       required this.titular,
       required this.bank,
       required this.tipo,

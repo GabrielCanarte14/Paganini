@@ -35,7 +35,7 @@ class BankItem extends StatelessWidget {
         onLongPress: onLongPress,
         child: Container(
             height: 200,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),

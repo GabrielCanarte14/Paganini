@@ -4,7 +4,8 @@ import 'package:paganini_wallet/features/payments_methods/domain/entities/bank_a
 
 class BankAccountModel extends BankAccount {
   const BankAccountModel(
-      {required super.number,
+      {required super.id,
+      required super.number,
       required super.titular,
       required super.bank,
       required super.identificacion,
@@ -12,6 +13,7 @@ class BankAccountModel extends BankAccount {
 
   factory BankAccountModel.fromJson(Json json) {
     return BankAccountModel(
+        id: json['id'],
         number: json['numeroCuenta'],
         titular: json['titular'],
         bank: json['nombreBanco'],
@@ -21,6 +23,7 @@ class BankAccountModel extends BankAccount {
 
   Json toJson() {
     return {
+      'id': id,
       'numeroCuenta': number,
       'titular': titular,
       'nombreBanco': bank,

@@ -11,6 +11,8 @@ import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cu
 import 'package:paganini_wallet/features/payments_methods/data/datasources/payment_methods_data_source.dart';
 import 'package:paganini_wallet/features/payments_methods/data/repositories/repositories.dart';
 import 'package:paganini_wallet/features/payments_methods/domain/repositories/repositories.dart';
+import 'package:paganini_wallet/features/payments_methods/domain/usecases/delete_payment_method.dart';
+import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_bank_account.dart';
 import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_card.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
 import 'package:paganini_wallet/features/shared/data/services/key_value_storage_service_impl.dart';
@@ -56,6 +58,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => KeyValueStorageServiceImpl());
   sl.registerLazySingleton(() => GetMethods(sl()));
   sl.registerLazySingleton(() => RegisterCard(sl()));
+  sl.registerLazySingleton(() => RegisterbankAccount(sl()));
+  sl.registerLazySingleton(() => DeletePaymentMethod(sl()));
 
   //! Auth
   sl.registerLazySingleton(() => AuthBloc(
@@ -69,6 +73,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => MethodsBloc(
       getMethodsUseCase: sl(),
       registerCardUseCase: sl(),
+      registerbankAccount: sl(),
+      deletePaymentMethod: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
 
   sl.registerLazySingleton(() => LoginFormCubit());
