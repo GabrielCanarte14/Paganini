@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:paganini_wallet/core/constants/api_constants.dart';
 import 'package:paganini_wallet/core/error/error.dart';
+import 'package:paganini_wallet/features/auth/data/model/user_model.dart';
 import 'package:paganini_wallet/features/shared/data/services/key_value_storage_service_impl.dart';
 
 abstract class AuthRemoteDataSource {
@@ -9,6 +10,7 @@ abstract class AuthRemoteDataSource {
       String phone, String password);
   Future<String> forgotPassword(String email);
   Future<String> resetPassword(String codigo, String email, String password);
+  Future<UserModel> getUserData();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -50,7 +52,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'telefono': phone,
         'password': password
       });
-      print('Hola ${result.statusCode}');
       if (result.statusCode != 201) {
         throw ServerException(message: result.data['message']);
       }
@@ -81,11 +82,39 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final result = await _client.post(resetPasswordUrl,
           data: {'correo': email, 'codigo': codigo, 'newPassword': password});
-      print(result);
       if (result.data['status'] == 400) {
         return result.data['status'];
       }
       return result.data['message'];
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<UserModel> getUserData() async {
+    final rawToken = await keyValueStorageService.getValue<String>('token');
+    final email = await keyValueStorageService.getValue<String>('email');
+    final token = rawToken?.trim().replaceAll('\r', '').replaceAll('\n', '');
+    if (token == null || token.isEmpty || email == null || email.isEmpty) {
+      throw TimeoutException();
+    }
+    try {
+      final result = await _client.get(
+        getUserDataUrl,
+        queryParameters: {"correo": email},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json'
+          },
+        ),
+      );
+      if (result.statusCode == 200) {
+        return UserModel.fromJson(result.data);
+      }
+      throw ServerException(
+          message: 'HTTP ${result.statusCode}: ${result.statusMessage}');
     } catch (e) {
       throw ServerException(message: e.toString());
     }

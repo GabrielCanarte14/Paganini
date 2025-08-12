@@ -61,4 +61,14 @@ class UserError extends AuthState {
   List<Object> get props => [message];
 }
 
+class GetInfo extends AuthState {}
+
+class UserInfo extends AuthState {
+  final UserModel user;
+  const UserInfo({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+
 final class AuthInitial extends AuthState {}

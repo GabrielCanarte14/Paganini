@@ -3,6 +3,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:paganini_wallet/core/usecases/usecases.dart';
+import 'package:paganini_wallet/features/auth/data/model/models.dart';
 import 'package:paganini_wallet/features/auth/domain/entities/entities.dart';
 
 import '../../../../../core/error/failures.dart';
@@ -22,6 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Logout logoutUseCase;
   final RegisterUser registerUserUseCase;
   final ForgotPasswordUseCase forgotPasswordUseCase;
+  final GetUserData getUserData;
   final ResetPasswordUseCase resetPasswordUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
@@ -30,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required this.logoutUseCase,
       required this.registerUserUseCase,
       required this.forgotPasswordUseCase,
+      required this.getUserData,
       required this.resetPasswordUseCase,
       required this.keyValueStorageService})
       : super(AuthInitial()) {
@@ -39,6 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
     on<ForgotPasswordEvent>(_onForgotPassword);
     on<ResetPasswordEvent>(_onResetPassword);
+    on<GetUserDataEvent>(_onGetUserData);
   }
 
   Future<void> _onLoginRequested(
@@ -103,7 +108,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onForgotPassword(
       ForgotPasswordEvent event, Emitter<AuthState> emit) async {
     emit(Checking());
-    print('Lanzando evento de codigo');
     final failureOrUser =
         await forgotPasswordUseCase(ForgotParams(email: event.email));
     failureOrUser?.fold(
@@ -129,6 +133,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(Actualizado(mensaje: mensaje));
       },
     );
+  }
+
+  Future<void> _onGetUserData(
+      GetUserDataEvent event, Emitter<AuthState> emit) async {
+    emit(GetInfo());
+    final failureOrUser = await getUserData(NoParams());
+    failureOrUser.fold((failure) {
+      emit(UserError(message: failure.errorMessage));
+    }, (user) async {
+      emit(UserInfo(user: user));
+    });
   }
 
   String _mapFailureToMessage(Failure failure) {

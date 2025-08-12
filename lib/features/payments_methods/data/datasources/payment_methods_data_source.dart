@@ -54,14 +54,12 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
         for (final item in tarjetas) {
           metodos.add(CardModel.fromJson(item as Map<String, dynamic>));
         }
-        print(metodos);
         return metodos;
       }
       throw ServerException(
         message: 'HTTP ${result.statusCode}: ${result.statusMessage}',
       );
     } catch (e) {
-      print(e.toString());
       throw ServerException(message: e.toString());
     }
   }
@@ -113,7 +111,6 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
       };
     }
     try {
-      print(cuerpo);
       final result = await _client.post(
         registerPaymentMethodUrl,
         data: cuerpo,
@@ -125,7 +122,6 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
           },
         ),
       );
-      print(result);
       if (result.statusCode == 201) {
         return 'Su método de pago fue registrado correctamente';
       }

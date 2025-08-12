@@ -52,6 +52,7 @@ Future<void> init() async {
   //* Usecase
   sl.registerLazySingleton(() => Login(sl()));
   sl.registerLazySingleton(() => Logout(sl()));
+  sl.registerLazySingleton(() => GetUserData(sl()));
   sl.registerLazySingleton(() => RegisterUser(sl()));
   sl.registerLazySingleton(() => ForgotPasswordUseCase(sl()));
   sl.registerLazySingleton(() => ResetPasswordUseCase(sl()));
@@ -68,6 +69,7 @@ Future<void> init() async {
       registerUserUseCase: sl(),
       forgotPasswordUseCase: sl(),
       resetPasswordUseCase: sl(),
+      getUserData: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
 
   sl.registerLazySingleton(() => MethodsBloc(

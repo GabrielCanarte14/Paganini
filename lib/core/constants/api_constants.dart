@@ -6,6 +6,7 @@ const String dsnSentry =
 final apiUrl = Environment.apiUrl;
 final loginUrl = "${apiUrl}auth/login";
 final registerUserUrl = '${apiUrl}auth/signup';
+final getUserDataUrl = '${apiUrl}users';
 final forgotPasswordUrl = '${apiUrl}auth/forgot-password';
 final resetPasswordUrl = '${apiUrl}auth/confirm-forgot-password';
 final getPaymentMethodsUrl = '${apiUrl}payment-methods/by-user';

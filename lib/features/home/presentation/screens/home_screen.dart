@@ -16,9 +16,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              WelcomeMessageWidget(),
-              SizedBox(height: 30),
-              BalanceCardWidget(),
+              WelcomeAndBalanceWidget(controller: controller),
               SizedBox(height: 20),
               PaymentMethodsWidget(controller: controller),
               SizedBox(height: 10),

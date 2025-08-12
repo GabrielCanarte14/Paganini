@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:paganini_wallet/core/error/error.dart';
 import 'package:paganini_wallet/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:paganini_wallet/features/auth/data/model/user_model.dart';
 import 'package:paganini_wallet/features/auth/domain/repositories/auth_repository.dart';
 import 'package:paganini_wallet/features/shared/data/services/key_value_storage_service_impl.dart';
 
@@ -52,6 +53,16 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final codigo = await authRemoteDataSource.forgotPassword(email);
       return Right(codigo);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(errorMessage: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserModel>> getUserData() async {
+    try {
+      final usuario = await authRemoteDataSource.getUserData();
+      return Right(usuario);
     } on ServerException catch (e) {
       return Left(ServerFailure(errorMessage: e.message));
     }

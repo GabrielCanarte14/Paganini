@@ -73,6 +73,8 @@ class ResetPasswordEvent extends AuthEvent {
 
 class CheckAuthStatusEvent extends AuthEvent {}
 
+class GetUserDataEvent extends AuthEvent {}
+
 class AuthErrorEvent extends AuthEvent {
   final String message;
 

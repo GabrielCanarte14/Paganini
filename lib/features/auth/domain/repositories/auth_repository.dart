@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:paganini_wallet/core/error/error.dart';
+import 'package:paganini_wallet/features/auth/data/model/models.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, void>?> login(String email, String password);
@@ -7,4 +8,5 @@ abstract class AuthRepository {
       String email, String phone, String password);
   Future<Either<Failure, Unit>?> logout();
   Future<Either<Failure, String>?> forgotPassword(String email);
+  Future<Either<Failure, UserModel>> getUserData();
 }
