@@ -4,21 +4,21 @@ import 'package:paganini_wallet/core/error/error.dart';
 import 'package:paganini_wallet/core/usecases/usecases.dart';
 import 'package:paganini_wallet/features/qr/domain/repositories/qr_repository.dart';
 
-class Deletecontact implements UseCase<String, DeleteParams> {
+class DeleteContact implements UseCase<String, DeleteContactParams> {
   final QrRepository repository;
 
-  Deletecontact(this.repository);
+  DeleteContact(this.repository);
 
   @override
-  Future<Either<Failure, String>> call(DeleteParams params) async {
+  Future<Either<Failure, String>> call(DeleteContactParams params) async {
     return await repository.deleteContact(params.correo);
   }
 }
 
-class DeleteParams extends Equatable {
+class DeleteContactParams extends Equatable {
   final String correo;
 
-  const DeleteParams({
+  const DeleteContactParams({
     required this.correo,
   });
 
