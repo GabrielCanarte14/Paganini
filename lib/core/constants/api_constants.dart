@@ -12,3 +12,4 @@ final resetPasswordUrl = '${apiUrl}auth/confirm-forgot-password';
 final getPaymentMethodsUrl = '${apiUrl}payment-methods/by-user';
 final registerPaymentMethodUrl = '${apiUrl}payment-methods';
 final deletePaymentMethodUrl = '${apiUrl}payment-methods/';
+final contactsUrl = '${apiUrl}users/';
