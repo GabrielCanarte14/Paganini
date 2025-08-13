@@ -6,6 +6,8 @@ import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/core/utils/show_warning_dialog_widget.dart';
 import 'package:paganini_wallet/features/qr/data/model/contact_model.dart';
 import 'package:paganini_wallet/features/qr/presentation/widgets/widgets.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../bloc/contactos/contactos_bloc.dart';
 
@@ -121,20 +123,17 @@ class _ContactosScreenState extends State<ContactosScreen> {
             curr is ContactoElimindo,
         listener: (context, state) {
           if (state is ContactoError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            showTopSnackBar(Overlay.of(context),
+                CustomSnackBar.error(message: state.message));
             _refreshCompleter?.complete();
             _refreshCompleter = null;
           } else if (state is Agregado) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Contacto agregado')),
-            );
+            showTopSnackBar(Overlay.of(context),
+                CustomSnackBar.success(message: 'Contacto agregado'));
             context.read<ContactosBloc>().add(GetContactosEvent());
           } else if (state is ContactoElimindo) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            showTopSnackBar(Overlay.of(context),
+                CustomSnackBar.success(message: state.message));
             context.read<ContactosBloc>().add(GetContactosEvent());
           } else if (state is Complete) {
             _all = state.contactos;
@@ -193,8 +192,6 @@ class _ContactosScreenState extends State<ContactosScreen> {
                                 itemBuilder: (context, i) {
                                   final c = _filtered[i];
                                   final fullName = '${c.nombre} ${c.apellido}';
-
-                                  // Long press para eliminar sin tocar ContactTile
                                   return InkWell(
                                     onLongPress: () {
                                       HapticFeedback.selectionClick();
