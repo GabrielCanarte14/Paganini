@@ -59,7 +59,6 @@ class ContactTile extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: primaryColor),
             ],
           ),
         ),

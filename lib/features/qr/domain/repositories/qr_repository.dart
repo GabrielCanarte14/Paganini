@@ -6,5 +6,4 @@ abstract class QrRepository {
   Future<Either<Failure, List<ContactModel>>> getContacts();
   Future<Either<Failure, ContactModel>> registerContact(String email);
   Future<Either<Failure, String>> deleteContact(String email);
-  Future<Either<Failure, String>> enviarDinero(String monto, String correo);
 }

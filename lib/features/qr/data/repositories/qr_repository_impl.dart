@@ -25,12 +25,6 @@ class QrRepositoryImpl implements QrRepository {
   }
 
   @override
-  Future<Either<Failure, String>> enviarDinero(String monto, String correo) {
-    // TODO: implement enviarDinero
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, List<ContactModel>>> getContacts() async {
     try {
       final contactos = await qrDataSource.getContacts();

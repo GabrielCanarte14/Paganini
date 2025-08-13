@@ -13,3 +13,4 @@ final getPaymentMethodsUrl = '${apiUrl}payment-methods/by-user';
 final registerPaymentMethodUrl = '${apiUrl}payment-methods';
 final deletePaymentMethodUrl = '${apiUrl}payment-methods/';
 final contactsUrl = '${apiUrl}users/';
+final paymentUrl = '${apiUrl}api/transacciones/enviar/correo';

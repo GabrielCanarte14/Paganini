@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/core/utils/show_warning_dialog_widget.dart';
 import 'package:paganini_wallet/features/qr/data/model/contact_model.dart';
+import 'package:paganini_wallet/features/qr/presentation/screens/payment_ammount_screen.dart';
 import 'package:paganini_wallet/features/qr/presentation/widgets/widgets.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -80,7 +81,17 @@ class _ContactosScreenState extends State<ContactosScreen> {
     );
   }
 
-  void _onTapContact(ContactModel c) {}
+  void _onTapContact(ContactModel c) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SendMoneyScreen(
+          name: c.nombre,
+          email: c.correo,
+        ),
+      ),
+    );
+  }
 
   void _confirmDeleteContacto(BuildContext context, String correo) {
     showWarningDialog(
@@ -145,7 +156,6 @@ class _ContactosScreenState extends State<ContactosScreen> {
         buildWhen: (prev, curr) => true,
         builder: (context, state) {
           final isLoading = state is Checking && _all.isEmpty;
-
           return SafeArea(
             child: Column(
               children: [
