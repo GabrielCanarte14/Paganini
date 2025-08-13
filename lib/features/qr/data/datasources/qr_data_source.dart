@@ -91,21 +91,44 @@ class QrDataSourceImpl implements QrDataSource {
       throw TimeoutException();
     }
     try {
-      final result = await _client.delete(
-        '$contactsUrl$email/contacts/$correo',
+      final base = Uri.parse(contactsUrl);
+      final uri = Uri(
+        scheme: base.scheme,
+        host: base.host,
+        port: base.hasPort ? base.port : null,
+        pathSegments: [
+          ...base.pathSegments.where((s) => s.isNotEmpty),
+          email,
+          'contacts',
+          correo,
+        ],
+      );
+      final result = await _client.deleteUri(
+        uri,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
           },
+          followRedirects: false,
+          validateStatus: (_) => true,
+          responseType: ResponseType.json,
         ),
       );
+
       if (result.statusCode == 200) {
-        return result.data['message'];
+        final data = result.data;
+        if (data is Map && data['message'] is String) {
+          return data['message'] as String;
+        }
+        return 'Contacto eliminado';
       }
+
       throw ServerException(
-          message: 'HTTP ${result.statusCode}: ${result.statusMessage}');
+        message: 'HTTP ${result.statusCode}: ${result.statusMessage}',
+      );
+    } on DioException catch (e) {
+      throw ServerException(message: e.message ?? 'Error de red');
     } catch (e) {
       throw ServerException(message: e.toString());
     }

@@ -15,6 +15,11 @@ import 'package:paganini_wallet/features/payments_methods/domain/usecases/delete
 import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_bank_account.dart';
 import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_card.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
+import 'package:paganini_wallet/features/qr/data/datasources/qr_data_source.dart';
+import 'package:paganini_wallet/features/qr/data/repositories/qr_repository_impl.dart';
+import 'package:paganini_wallet/features/qr/domain/repositories/qr_repository.dart';
+import 'package:paganini_wallet/features/qr/domain/usecases/usecases.dart';
+import 'package:paganini_wallet/features/qr/presentation/bloc/contactos/contactos_bloc.dart';
 import 'package:paganini_wallet/features/shared/data/services/key_value_storage_service_impl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -35,11 +40,14 @@ Future<void> init() async {
 
   //!Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+
   //* Datasource
   sl.registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(sl(), sl()));
   sl.registerLazySingleton<PaymentMethodsDataSource>(
       () => PaymentMethodsDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<QrDataSource>(() => QrDataSourceImpl(sl(), sl()));
+
   //* Repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
       authRemoteDataSource: sl<AuthRemoteDataSource>(),
@@ -48,6 +56,8 @@ Future<void> init() async {
       PaymentMethodsRepositoryImpl(
           paymentMethodsDataSource: sl<PaymentMethodsDataSource>(),
           keyValueStorageService: sl()));
+  sl.registerLazySingleton<QrRepository>(() => QrRepositoryImpl(
+      keyValueStorageService: sl(), qrDataSource: sl<QrDataSource>()));
 
   //* Usecase
   sl.registerLazySingleton(() => Login(sl()));
@@ -61,6 +71,9 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RegisterCard(sl()));
   sl.registerLazySingleton(() => RegisterbankAccount(sl()));
   sl.registerLazySingleton(() => DeletePaymentMethod(sl()));
+  sl.registerLazySingleton(() => DeleteContact(sl()));
+  sl.registerLazySingleton(() => GetContacts(sl()));
+  sl.registerLazySingleton(() => RegisterContact(sl()));
 
   //! Auth
   sl.registerLazySingleton(() => AuthBloc(
@@ -72,12 +85,20 @@ Future<void> init() async {
       getUserData: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
 
+  //! PaymentMethods
   sl.registerLazySingleton(() => MethodsBloc(
       getMethodsUseCase: sl(),
       registerCardUseCase: sl(),
       registerbankAccount: sl(),
       deletePaymentMethod: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
+
+  //! Qr
+  sl.registerLazySingleton(() => ContactosBloc(
+      deleteContacto: sl(),
+      getContactosUseCase: sl(),
+      keyValueStorageService: sl<KeyValueStorageServiceImpl>(),
+      registerContactoUseCase: sl()));
 
   sl.registerLazySingleton(() => LoginFormCubit());
   sl.registerLazySingleton(() => RegisterFormCubit());

@@ -5,6 +5,7 @@ import 'package:paganini_wallet/core/theme/theme.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/bloc.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cubit.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
+import 'package:paganini_wallet/features/qr/presentation/bloc/contactos/contactos_bloc.dart';
 import 'core/router/app_router.dart';
 import 'injection_container.dart' as di;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => di.sl<AuthBloc>()),
           BlocProvider(create: (context) => di.sl<LoginFormCubit>()),
           BlocProvider(create: (context) => di.sl<RegisterFormCubit>()),
+          BlocProvider(create: (context) => di.sl<ContactosBloc>())
         ],
         child: MaterialApp.router(
             routeInformationParser: appRouter.routeInformationParser,

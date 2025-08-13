@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/auth/auth_bloc.dart';
+import 'package:paganini_wallet/features/qr/presentation/screens/contactos_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class WelcomeAndBalanceWidget extends StatefulWidget {
@@ -57,7 +58,11 @@ class _WelcomeAndBalanceWidgetState extends State<WelcomeAndBalanceWidget> {
       {
         'icon': Icons.arrow_upward_rounded,
         'label': 'Enviar',
-        'accion': () => widget.controller.jumpToTab(2)
+        'accion': () => Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                builder: (_) => ContactosScreen(),
+              ),
+            )
       },
       {
         'icon': Icons.arrow_downward_rounded,

@@ -3,11 +3,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/usecases/usecases.dart';
-import 'package:paganini_wallet/features/payments_methods/domain/usecases/delete_payment_method.dart';
-import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_bank_account.dart';
-import 'package:paganini_wallet/features/payments_methods/domain/usecases/register_card.dart';
 import 'package:paganini_wallet/features/qr/data/model/models.dart';
-import 'package:paganini_wallet/features/qr/domain/usecases/deleteContact.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../shared/data/services/services.dart';
 import '../../../domain/usecases/usecases.dart';
