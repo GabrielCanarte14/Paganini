@@ -15,3 +15,4 @@ final deletePaymentMethodUrl = '${apiUrl}payment-methods/';
 final contactsUrl = '${apiUrl}users/';
 final paymentUrl = '${apiUrl}api/transacciones/enviar/correo';
 final generateQrUrl = '${apiUrl}transactions/payment-requests';
+final getHistoryUrl = '${apiUrl}api/transacciones/historial';
