@@ -1,7 +1,7 @@
 import 'package:paganini_wallet/core/constants/typedefs.dart';
-import 'package:paganini_wallet/features/history/domain/entities/recibo.dart';
+import 'package:paganini_wallet/features/history/domain/entities/entities.dart';
 
-class EnvioModel extends Recibo {
+class EnvioModel extends Envio {
   const EnvioModel({
     required super.nombre,
     required super.apellido,
@@ -11,11 +11,12 @@ class EnvioModel extends Recibo {
   });
 
   factory EnvioModel.fromJson(Json json) {
+    print(json);
     return EnvioModel(
       nombre: json['receptorNombre'],
       apellido: json['receptorApellido'],
-      fecha: json['fecha'],
-      correo: json['emisorCorreo'],
+      fecha: DateTime.parse(json['fecha'] as String),
+      correo: json['receptorCorreo'],
       amount: json['monto'],
     );
   }

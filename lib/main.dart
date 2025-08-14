@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:paganini_wallet/core/theme/theme.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/bloc.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cubit.dart';
+import 'package:paganini_wallet/features/history/presentation/bloc/historial/historial_bloc.dart';
 import 'package:paganini_wallet/features/payments_methods/presentation/bloc/methods/methods_bloc.dart';
 import 'package:paganini_wallet/features/qr/presentation/bloc/contactos/contactos_bloc.dart';
 import 'package:paganini_wallet/features/qr/presentation/bloc/pagos/pagos_bloc.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => di.sl<ContactosBloc>()),
           BlocProvider(create: (context) => di.sl<MethodsBloc>()),
           BlocProvider(create: (context) => di.sl<PagosBloc>()),
+          BlocProvider(create: (context) => di.sl<HistorialBloc>())
         ],
         child: MaterialApp.router(
             routeInformationParser: appRouter.routeInformationParser,

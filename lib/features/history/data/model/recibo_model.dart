@@ -1,8 +1,8 @@
 import 'package:paganini_wallet/core/constants/typedefs.dart';
 import 'package:paganini_wallet/features/history/domain/entities/recibo.dart';
 
-class TransactionModel extends Recibo {
-  const TransactionModel({
+class ReciboModel extends Recibo {
+  const ReciboModel({
     required super.nombre,
     required super.apellido,
     required super.fecha,
@@ -10,11 +10,12 @@ class TransactionModel extends Recibo {
     required super.amount,
   });
 
-  factory TransactionModel.fromJson(Json json) {
-    return TransactionModel(
+  factory ReciboModel.fromJson(Json json) {
+    print(json);
+    return ReciboModel(
       nombre: json['emisorNombre'],
       apellido: json['emisorApellido'],
-      fecha: json['fecha'],
+      fecha: DateTime.parse(json['fecha'] as String),
       correo: json['emisorCorreo'],
       amount: json['monto'],
     );

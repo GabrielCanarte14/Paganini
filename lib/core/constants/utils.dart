@@ -28,6 +28,10 @@ String formatCurrencyEsFromRaw(String raw) {
       .replaceAll('#', '.');
 }
 
+String formatAccountType(AccountType tipo) {
+  return tipo == AccountType.ahorro ? 'Ahorro' : 'Corriente';
+}
+
 class Formatters {
   static String dateYmd(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);

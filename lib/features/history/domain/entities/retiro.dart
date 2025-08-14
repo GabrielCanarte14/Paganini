@@ -6,12 +6,14 @@ class Retiro extends Equatable {
   final AccountType tipo;
   final String titular;
   final DateTime fecha;
+  final double amount;
 
   const Retiro(
       {required this.fecha,
       required this.banco,
       required this.titular,
-      required this.tipo});
+      required this.tipo,
+      required this.amount});
 
   @override
   List<Object?> get props => [titular];

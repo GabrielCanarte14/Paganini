@@ -9,8 +9,9 @@ class RecargaModel extends Recarga {
   });
 
   factory RecargaModel.fromJson(Json json) {
+    print(json);
     return RecargaModel(
-      fecha: json['fecha'],
+      fecha: DateTime.parse(json['fecha'] as String),
       red: json['red'],
       amount: json['monto'],
     );

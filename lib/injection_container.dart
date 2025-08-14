@@ -8,6 +8,10 @@ import 'package:paganini_wallet/features/auth/data/repositories/auth_repository_
 import 'package:paganini_wallet/features/auth/domain/repositories/auth_repository.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/bloc.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/register_form_cubit.dart';
+import 'package:paganini_wallet/features/history/data/datasources/history_data_source.dart';
+import 'package:paganini_wallet/features/history/data/repositories/history_repository_impl.dart';
+import 'package:paganini_wallet/features/history/domain/repositories/repositories.dart';
+import 'package:paganini_wallet/features/history/domain/usecases/getHistory.dart';
 import 'package:paganini_wallet/features/payments_methods/data/datasources/payment_methods_data_source.dart';
 import 'package:paganini_wallet/features/payments_methods/data/repositories/repositories.dart';
 import 'package:paganini_wallet/features/payments_methods/domain/repositories/repositories.dart';
@@ -28,6 +32,7 @@ import 'package:paganini_wallet/features/shared/data/services/key_value_storage_
 import 'package:path_provider/path_provider.dart';
 
 import 'features/auth/domain/usecases/usecases.dart';
+import 'features/history/presentation/bloc/historial/historial_bloc.dart';
 import 'features/payments_methods/domain/usecases/usecases.dart';
 
 final sl = GetIt.instance;
@@ -53,6 +58,8 @@ Future<void> init() async {
   sl.registerLazySingleton<QrDataSource>(() => QrDataSourceImpl(sl(), sl()));
   sl.registerLazySingleton<PaymentDataSource>(
       () => PaymentDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<HistoryDataSource>(
+      () => HistoryDataSourceImpl(sl(), sl()));
 
   //* Repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
@@ -67,6 +74,9 @@ Future<void> init() async {
   sl.registerLazySingleton<PaymentRepository>(() => PaymentRepositoryImpl(
       keyValueStorageService: sl(),
       paymentDataSource: sl<PaymentDataSource>()));
+  sl.registerLazySingleton<HistoryRepository>(() => HistoryRepositoryImpl(
+      keyValueStorageService: sl(),
+      historyDataSource: sl<HistoryDataSource>()));
 
   //* Usecase
   sl.registerLazySingleton(() => Login(sl()));
@@ -85,6 +95,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RegisterContact(sl()));
   sl.registerLazySingleton(() => Payment(sl()));
   sl.registerLazySingleton(() => GenerateAmountQr(sl()));
+  sl.registerLazySingleton(() => GetHistory(sl()));
 
   //! Auth
   sl.registerLazySingleton(() => AuthBloc(
@@ -95,6 +106,8 @@ Future<void> init() async {
       resetPasswordUseCase: sl(),
       getUserData: sl(),
       keyValueStorageService: sl<KeyValueStorageServiceImpl>()));
+  sl.registerLazySingleton(() => LoginFormCubit());
+  sl.registerLazySingleton(() => RegisterFormCubit());
 
   //! PaymentMethods
   sl.registerLazySingleton(() => MethodsBloc(
@@ -116,6 +129,9 @@ Future<void> init() async {
         keyValueStorageService: sl<KeyValueStorageServiceImpl>(),
       ));
 
-  sl.registerLazySingleton(() => LoginFormCubit());
-  sl.registerLazySingleton(() => RegisterFormCubit());
+  //! History
+  sl.registerLazySingleton(() => HistorialBloc(
+        getHistorialUseCase: sl(),
+        keyValueStorageService: sl<KeyValueStorageServiceImpl>(),
+      ));
 }

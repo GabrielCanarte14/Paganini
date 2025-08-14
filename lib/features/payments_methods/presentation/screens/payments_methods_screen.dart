@@ -64,7 +64,7 @@ class _PaymentsMethodsScreenState extends State<PaymentsMethodsScreen> {
               Overlay.of(context),
               CustomSnackBar.success(message: state.message),
             );
-            _refresh(); // vuelve a pedir los métodos
+            _refresh();
           }
           if (state is MethodsError) {
             showTopSnackBar(

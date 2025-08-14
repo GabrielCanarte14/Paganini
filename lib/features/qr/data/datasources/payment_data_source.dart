@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:paganini_wallet/core/constants/api_constants.dart';
 import 'package:paganini_wallet/core/error/error.dart';
 import 'package:paganini_wallet/features/qr/data/model/models.dart';
