@@ -2,7 +2,8 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:paganini_wallet/features/qr/domain/usecases/payment.dart';
+import 'package:paganini_wallet/features/qr/data/model/models.dart';
+import 'package:paganini_wallet/features/qr/domain/usecases/usecases.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../shared/data/services/services.dart';
 part 'pagos_event.dart';
@@ -13,12 +14,16 @@ const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 
 class PagosBloc extends Bloc<PagosEvent, PagosState> {
   final Payment paymentUseCase;
+  final GenerateAmountQr generateAmountQrUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   PagosBloc(
-      {required this.paymentUseCase, required this.keyValueStorageService})
+      {required this.paymentUseCase,
+      required this.generateAmountQrUseCase,
+      required this.keyValueStorageService})
       : super(PaymentInitial()) {
     on<PaymentEvent>(_onPaymentRequested);
+    on<GenerateAmountQrEvent>(_onGenerateAmmounQrRequested);
   }
 
   Future<void> _onPaymentRequested(
@@ -30,6 +35,18 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
       emit(PaymentError(message: _mapFailureToMessage(failure)));
     }, (message) async {
       emit(PaymentComplete(message: message));
+    });
+  }
+
+  Future<void> _onGenerateAmmounQrRequested(
+      GenerateAmountQrEvent event, Emitter<PagosState> emit) async {
+    emit(Revisando());
+    final failureOrMessage =
+        await generateAmountQrUseCase(AmountQrParams(amount: event.monto));
+    await failureOrMessage.fold((failure) {
+      emit(PaymentError(message: _mapFailureToMessage(failure)));
+    }, (qr) async {
+      emit(AmountQrComplete(qr: qr));
     });
   }
 

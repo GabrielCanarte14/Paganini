@@ -9,6 +9,8 @@ sealed class PagosState extends Equatable {
 
 class Revisando extends PagosState {}
 
+class Generando extends PagosState {}
+
 class PaymentComplete extends PagosState {
   final String message;
 
@@ -18,6 +20,17 @@ class PaymentComplete extends PagosState {
 
   @override
   List<Object> get props => [message];
+}
+
+class AmountQrComplete extends PagosState {
+  final QrPayloadModel qr;
+
+  const AmountQrComplete({
+    required this.qr,
+  });
+
+  @override
+  List<Object> get props => [qr];
 }
 
 final class PaymentInitial extends PagosState {}

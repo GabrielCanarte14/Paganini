@@ -10,7 +10,7 @@ class BalanceCardWidget extends StatelessWidget {
       {'icon': Icons.arrow_upward_rounded, 'label': 'Enviar'},
       {'icon': Icons.arrow_downward_rounded, 'label': 'Recibir'},
       {'icon': Icons.add, 'label': 'Recargar'},
-      {'icon': Icons.miscellaneous_services, 'label': 'Servicios'},
+      {'icon': Icons.miscellaneous_services, 'label': 'Retirar'},
     ];
 
     return Container(

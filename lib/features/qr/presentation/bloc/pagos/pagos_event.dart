@@ -13,3 +13,9 @@ class PaymentEvent extends PagosEvent {
 
   const PaymentEvent({required this.correo, required this.monto});
 }
+
+class GenerateAmountQrEvent extends PagosEvent {
+  final double monto;
+
+  const GenerateAmountQrEvent({required this.monto});
+}

@@ -47,7 +47,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget>
     final titleStyle =
         const TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,11 +66,12 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget>
             }
             if (state is MethodsError) {
               return Text(
-                'No se pudo cargar los métodos.\nDesliza en la pantalla de Métodos para reintentar.',
+                'No se pudieron cargar los métodos.\nDesliza para reintentar.',
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium
                     ?.copyWith(color: Colors.black54),
+                textAlign: TextAlign.center,
               );
             }
             if (state is Complete) {
