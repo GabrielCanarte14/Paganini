@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:paganini_wallet/core/constants/api_constants.dart';
 import 'package:paganini_wallet/core/error/error.dart';
 import 'package:paganini_wallet/features/auth/data/model/user_model.dart';
@@ -11,6 +12,7 @@ abstract class AuthRemoteDataSource {
   Future<String> forgotPassword(String email);
   Future<String> resetPassword(String codigo, String email, String password);
   Future<UserModel> getUserData();
+  Future<void> registerDevice();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -35,6 +37,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await keyValueStorageService.setKeyValue(
             'refreshToken', result.data['refreshToken'].toString());
         await keyValueStorageService.setKeyValue('email', username);
+        await registerDevice();
       }
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -57,6 +60,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       return result.data['message'];
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> registerDevice() async {
+    final email = await keyValueStorageService.getValue<String>('email');
+    final token = await FirebaseMessaging.instance.getToken();
+    final rawToken = await keyValueStorageService.getValue<String>('token');
+    final userToken =
+        rawToken?.trim().replaceAll('\r', '').replaceAll('\n', '');
+    if (token == null || token.isEmpty) {
+      throw TimeoutException();
+    }
+    print(
+        'El token a registrar: $token y el correo es: $email y el user token es $userToken');
+    try {
+      final result = await _client.post(
+        getNotificacionesUrl,
+        data: {
+          'correo': email,
+          'token': token,
+          'plataforma': 'ANDROID',
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $userToken',
+            'Accept': 'application/json'
+          },
+        ),
+      );
     } catch (e) {
       throw ServerException(message: e.toString());
     }
