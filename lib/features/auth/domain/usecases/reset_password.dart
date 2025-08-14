@@ -11,7 +11,8 @@ class ResetPasswordUseCase implements UseCase<void, ResetParams> {
 
   @override
   Future<Either<Failure, String>?> call(ResetParams params) async {
-    return await repository.forgotPassword(params.email);
+    return await repository.resetPassword(
+        params.codigo, params.email, params.password);
   }
 }
 

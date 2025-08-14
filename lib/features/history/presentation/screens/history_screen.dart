@@ -26,7 +26,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   String _formatHeaderDate(DateTime fecha) {
     try {
-      final fmt = DateFormat('EEEE d \'de\' MMMM, yyyy', 'es_ES');
+      final fmt = DateFormat('dd/MM/yyyy', 'es_ES');
       final s = fmt.format(fecha);
       return s[0].toUpperCase() + s.substring(1);
     } catch (_) {

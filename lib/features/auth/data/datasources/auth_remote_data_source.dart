@@ -40,7 +40,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await registerDevice();
       }
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: 'Usuario o contraseña incorrecto');
     }
   }
 
@@ -75,8 +75,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     if (token == null || token.isEmpty) {
       throw TimeoutException();
     }
-    print(
-        'El token a registrar: $token y el correo es: $email y el user token es $userToken');
     try {
       final result = await _client.post(
         getNotificacionesUrl,
@@ -115,6 +113,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<String> resetPassword(
       String codigo, String email, String password) async {
     try {
+      print('cambiando nueva contrasenia');
       final result = await _client.post(resetPasswordUrl,
           data: {'correo': email, 'codigo': codigo, 'newPassword': password});
       if (result.data['status'] == 400) {

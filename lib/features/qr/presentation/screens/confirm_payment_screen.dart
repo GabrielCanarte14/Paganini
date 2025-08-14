@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paganini_wallet/features/history/presentation/bloc/historial/historial_bloc.dart';
 import 'package:paganini_wallet/features/qr/presentation/widgets/widgets.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -38,6 +39,7 @@ class ConfirmTransferScreen extends StatelessWidget {
             CustomSnackBar.success(message: state.message),
           );
           context.read<AuthBloc>().add(GetUserDataEvent());
+          context.read<HistorialBloc>().add(GetHistorialEvent());
           Future.microtask(() {
             int pops = 0;
             final nav = Navigator.of(context);
