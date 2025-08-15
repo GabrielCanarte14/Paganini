@@ -37,7 +37,10 @@ class ConfirmTransferScreen extends StatelessWidget {
         if (state is PaymentComplete) {
           showTopSnackBar(
             Overlay.of(context),
-            CustomSnackBar.success(message: state.message),
+            CustomSnackBar.success(
+              message: state.message,
+              backgroundColor: secondaryColor,
+            ),
           );
           context.read<AuthBloc>().add(GetUserDataEvent());
           context.read<HistorialBloc>().add(GetHistorialEvent());

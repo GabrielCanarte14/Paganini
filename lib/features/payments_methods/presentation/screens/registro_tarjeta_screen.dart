@@ -150,7 +150,12 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
   }
 
   void _toast(String msg) {
-    showTopSnackBar(Overlay.of(context), CustomSnackBar.success(message: msg));
+    showTopSnackBar(
+        Overlay.of(context),
+        CustomSnackBar.success(
+          message: msg,
+          backgroundColor: secondaryColor,
+        ));
   }
 
   void _toastError(String msg) {

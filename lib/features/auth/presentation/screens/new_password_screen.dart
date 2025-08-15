@@ -70,7 +70,10 @@ class _ForgotPasswordFormState extends State<_NewPasswordScreenForm> {
           if (state is Actualizado) {
             showTopSnackBar(
               Overlay.of(context),
-              CustomSnackBar.success(message: state.mensaje),
+              CustomSnackBar.success(
+                message: state.mensaje,
+                backgroundColor: secondaryColor,
+              ),
             );
             Navigator.of(context).push(
               MaterialPageRoute(

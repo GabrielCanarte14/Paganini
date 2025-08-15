@@ -92,8 +92,12 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               curr is PaymentError,
           listener: (context, state) {
             if (state is WithdrawComplete) {
-              showTopSnackBar(Overlay.of(context),
-                  CustomSnackBar.success(message: state.message));
+              showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.success(
+                    message: state.message,
+                    backgroundColor: secondaryColor,
+                  ));
               context.read<AuthBloc>().add(GetUserDataEvent());
               context.read<HistorialBloc>().add(GetHistorialEvent());
               Navigator.of(context).pop();

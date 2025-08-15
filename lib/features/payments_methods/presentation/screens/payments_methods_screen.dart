@@ -62,7 +62,10 @@ class _PaymentsMethodsScreenState extends State<PaymentsMethodsScreen> {
           if (state is Agregado) {
             showTopSnackBar(
               Overlay.of(context),
-              CustomSnackBar.success(message: state.message),
+              CustomSnackBar.success(
+                message: state.message,
+                backgroundColor: secondaryColor,
+              ),
             );
             _refresh();
           }

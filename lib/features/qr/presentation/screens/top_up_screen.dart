@@ -92,8 +92,12 @@ class _TopUpScreenState extends State<TopUpScreen> {
               curr is PaymentError,
           listener: (context, state) {
             if (state is TopUpComplete) {
-              showTopSnackBar(Overlay.of(context),
-                  CustomSnackBar.success(message: state.message));
+              showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.success(
+                    message: state.message,
+                    backgroundColor: secondaryColor,
+                  ));
               context.read<AuthBloc>().add(GetUserDataEvent());
               context.read<HistorialBloc>().add(GetHistorialEvent());
               Navigator.of(context).pop();

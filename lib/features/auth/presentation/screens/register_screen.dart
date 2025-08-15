@@ -60,7 +60,10 @@ class _RegisterForm extends StatelessWidget {
           if (state is Register) {
             showTopSnackBar(
               Overlay.of(context),
-              CustomSnackBar.success(message: state.mensaje),
+              CustomSnackBar.success(
+                message: state.mensaje,
+                backgroundColor: secondaryColor,
+              ),
             );
             Navigator.pop(context);
           }

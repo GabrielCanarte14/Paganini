@@ -33,7 +33,11 @@ class _AsociarCuentaScreenState extends State<AsociarCuentaScreen> {
   }
 
   void _toast(String msg) => showTopSnackBar(
-      Overlay.of(context), CustomSnackBar.success(message: msg));
+      Overlay.of(context),
+      CustomSnackBar.success(
+        message: msg,
+        backgroundColor: secondaryColor,
+      ));
 
   void _toastError(String msg) {
     showTopSnackBar(Overlay.of(context), CustomSnackBar.error(message: msg));

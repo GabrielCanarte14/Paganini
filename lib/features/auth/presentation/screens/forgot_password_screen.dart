@@ -63,7 +63,10 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
           if (state is Aprovado) {
             showTopSnackBar(
               Overlay.of(context),
-              CustomSnackBar.success(message: state.mensaje),
+              CustomSnackBar.success(
+                message: state.mensaje,
+                backgroundColor: secondaryColor,
+              ),
             );
             Navigator.of(context).push(
               MaterialPageRoute(

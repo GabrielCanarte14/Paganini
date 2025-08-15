@@ -140,12 +140,20 @@ class _ContactosScreenState extends State<ContactosScreen> {
             _refreshCompleter?.complete();
             _refreshCompleter = null;
           } else if (state is Agregado) {
-            showTopSnackBar(Overlay.of(context),
-                CustomSnackBar.success(message: 'Contacto agregado'));
+            showTopSnackBar(
+                Overlay.of(context),
+                CustomSnackBar.success(
+                  message: 'Contacto agregado',
+                  backgroundColor: secondaryColor,
+                ));
             context.read<ContactosBloc>().add(GetContactosEvent());
           } else if (state is ContactoElimindo) {
-            showTopSnackBar(Overlay.of(context),
-                CustomSnackBar.success(message: state.message));
+            showTopSnackBar(
+                Overlay.of(context),
+                CustomSnackBar.success(
+                  message: state.message,
+                  backgroundColor: secondaryColor,
+                ));
             context.read<ContactosBloc>().add(GetContactosEvent());
           } else if (state is Complete) {
             _all = state.contactos;
