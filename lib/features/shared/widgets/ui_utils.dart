@@ -22,7 +22,7 @@ class UiUtils {
       Color? normalProgressColor,
       bool? showWhite}) {
     return LottieBuilder.asset(
-      "assets/lottie/truck_loading.json",
+      "assets/lottie/trail_loading.json",
       width: width ?? 45,
       height: height ?? 45,
     );
