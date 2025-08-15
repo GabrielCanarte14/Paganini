@@ -65,18 +65,24 @@ class PaymentRepositoryImpl implements PaymentRepository {
   }
 
   @override
-  Future<Either<Failure, String>> enviarQr(double amount, String email) {
-    // TODO: implement enviarQr
-    throw UnimplementedError();
+  Future<Either<Failure, String>> enviarQr(double amount, String email) async {
+    try {
+      final resultado = await paymentDataSource.paymentQr(email, amount);
+      return Right(resultado);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
   }
 
   @override
   Future<Either<Failure, String>> enviarQrAmount(
       double amount, String payload) async {
     try {
-      final contactos =
+      final resultado =
           await paymentDataSource.paymentQrAmount(payload, amount);
-      return Right(contactos);
+      return Right(resultado);
     } on ServerException catch (e) {
       return Left(DioFailure(errorMessage: e.message));
     } catch (e) {

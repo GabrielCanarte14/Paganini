@@ -6,3 +6,4 @@ export './generate_amount_qr.dart';
 export './withdrawMoney.dart';
 export './topUpMoney.dart';
 export './qrAmountPayment.dart';
+export './qrPayment.dart';

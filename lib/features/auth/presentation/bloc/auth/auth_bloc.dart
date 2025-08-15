@@ -87,9 +87,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onCheckAuthStatus(
       CheckAuthStatusEvent event, Emitter<AuthState> emit) async {
-    print('Chekeando');
     emit(Comprobando());
-    print('Chekeando');
     final token = await keyValueStorageService.getValue<String>('token');
     final username = await keyValueStorageService.getValue<String>('username');
     final password = await keyValueStorageService.getValue<String>('password');

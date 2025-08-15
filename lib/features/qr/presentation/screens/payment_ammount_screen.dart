@@ -11,10 +11,12 @@ class SendMoneyScreen extends StatefulWidget {
     super.key,
     required this.name,
     required this.email,
+    required this.qr,
   });
 
   final String name;
   final String email;
+  final bool qr;
 
   @override
   State<SendMoneyScreen> createState() => _SendMoneyScreenState();
@@ -156,13 +158,21 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                                     name: widget.name,
                                     email: widget.email,
                                     amount: amount,
-                                    onConfirm: () {
-                                      context.read<PagosBloc>().add(
-                                            PaymentEvent(
-                                                correo: widget.email,
-                                                monto: amount),
-                                          );
-                                    },
+                                    onConfirm: widget.qr
+                                        ? () {
+                                            context.read<PagosBloc>().add(
+                                                  QrPaymentEvent(
+                                                      email: widget.email,
+                                                      monto: amount),
+                                                );
+                                          }
+                                        : () {
+                                            context.read<PagosBloc>().add(
+                                                  PaymentEvent(
+                                                      correo: widget.email,
+                                                      monto: amount),
+                                                );
+                                          },
                                   ),
                                 ),
                               );

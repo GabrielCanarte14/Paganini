@@ -133,7 +133,6 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
         message: 'HTTP ${result.statusCode}: ${result.statusMessage}',
       );
     } catch (e) {
-      print(e);
       throw ServerException(message: e.toString());
     }
   }

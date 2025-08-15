@@ -98,6 +98,7 @@ class _QrScreenState extends State<QrScreen> {
           builder: (_) => SendMoneyScreen(
             name: '',
             email: content,
+            qr: true,
           ),
         ),
       );
@@ -106,7 +107,6 @@ class _QrScreenState extends State<QrScreen> {
       return;
     }
 
-    // 3) No reconocido
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('QR no reconocido')),

@@ -88,6 +88,7 @@ class _ContactosScreenState extends State<ContactosScreen> {
         builder: (_) => SendMoneyScreen(
           name: c.nombre,
           email: c.correo,
+          qr: false,
         ),
       ),
     );

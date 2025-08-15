@@ -11,7 +11,6 @@ class ReciboModel extends Recibo {
   });
 
   factory ReciboModel.fromJson(Json json) {
-    print(json);
     return ReciboModel(
       nombre: json['emisorNombre'],
       apellido: json['emisorApellido'],

@@ -11,7 +11,6 @@ class EnvioModel extends Envio {
   });
 
   factory EnvioModel.fromJson(Json json) {
-    print(json);
     return EnvioModel(
       nombre: json['receptorNombre'],
       apellido: json['receptorApellido'],

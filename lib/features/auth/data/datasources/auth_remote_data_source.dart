@@ -113,7 +113,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<String> resetPassword(
       String codigo, String email, String password) async {
     try {
-      print('cambiando nueva contrasenia');
       final result = await _client.post(resetPasswordUrl,
           data: {'correo': email, 'codigo': codigo, 'newPassword': password});
       if (result.data['status'] == 400) {
@@ -144,7 +143,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
         ),
       );
-      print('El qr del usuario es: ${result.data['codigoQr']}');
       if (result.statusCode == 200) {
         return UserModel.fromJson(result.data);
       }

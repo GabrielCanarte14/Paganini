@@ -20,3 +20,4 @@ final getNotificacionesUrl = '${apiUrl}api/notifications/device';
 final topUpUrl = '${apiUrl}api/transacciones/recarga';
 final withdrawUrl = '${apiUrl}api/transacciones/retiro';
 final paymentQrAmountUrl = '${apiUrl}api/transacciones/enviar/qr-monto';
+final paymentQrUrl = '${apiUrl}api/transacciones/enviar/qr';
