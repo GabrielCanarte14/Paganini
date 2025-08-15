@@ -148,17 +148,13 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ),
           ),
           if (widget.obscureText)
-            GestureDetector(
-              onTap: () => setState(() => _obscureText = !_obscureText),
-              child: const Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(Icons.visibility, color: Colors.grey),
+            IconButton(
+              padding: const EdgeInsets.only(right: 10),
+              icon: Icon(
+                _obscureText ? Icons.visibility_off : Icons.visibility,
+                color: Colors.grey,
               ),
-            ),
-          if (widget.obscureText && _obscureText)
-            const Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(Icons.visibility_off, color: Colors.grey),
+              onPressed: () => setState(() => _obscureText = !_obscureText),
             ),
         ],
       ),
