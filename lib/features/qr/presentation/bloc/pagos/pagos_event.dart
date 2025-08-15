@@ -14,6 +14,13 @@ class PaymentEvent extends PagosEvent {
   const PaymentEvent({required this.correo, required this.monto});
 }
 
+class QrAmountPaymentEvent extends PagosEvent {
+  final double monto;
+  final String payload;
+
+  const QrAmountPaymentEvent({required this.monto, required this.payload});
+}
+
 class TopUpEvent extends PagosEvent {
   final double monto;
   final int methodId;

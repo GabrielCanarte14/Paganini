@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/core/constants/utils.dart';
+import 'package:paganini_wallet/features/qr/presentation/bloc/pagos/pagos_bloc.dart';
 import 'package:paganini_wallet/features/qr/presentation/screens/confirm_payment_screen.dart';
 import 'package:paganini_wallet/features/qr/presentation/widgets/widgets.dart';
 
@@ -154,6 +156,13 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                                     name: widget.name,
                                     email: widget.email,
                                     amount: amount,
+                                    onConfirm: () {
+                                      context.read<PagosBloc>().add(
+                                            PaymentEvent(
+                                                correo: widget.email,
+                                                monto: amount),
+                                          );
+                                    },
                                   ),
                                 ),
                               );

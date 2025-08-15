@@ -10,20 +10,21 @@ import 'package:paganini_wallet/features/auth/presentation/bloc/auth/auth_bloc.d
 import 'package:paganini_wallet/features/qr/presentation/bloc/pagos/pagos_bloc.dart';
 
 class ConfirmTransferScreen extends StatelessWidget {
-  const ConfirmTransferScreen({
-    super.key,
-    required this.name,
-    required this.email,
-    required this.amount,
-    this.date,
-    this.paymentMethod = 'Saldo de la cuenta',
-  });
-
   final String name;
   final String email;
   final double amount;
   final DateTime? date;
   final String paymentMethod;
+  final VoidCallback onConfirm;
+
+  const ConfirmTransferScreen(
+      {super.key,
+      required this.name,
+      required this.email,
+      required this.amount,
+      this.date,
+      this.paymentMethod = 'Saldo de la cuenta',
+      required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
@@ -105,13 +106,7 @@ class ConfirmTransferScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
                       child: SubmitButton(
-                        isLoading: isLoading,
-                        onPressed: () {
-                          context.read<PagosBloc>().add(
-                                PaymentEvent(correo: email, monto: amount),
-                              );
-                        },
-                      ),
+                          isLoading: isLoading, onPressed: onConfirm),
                     ),
                   ],
                 ),

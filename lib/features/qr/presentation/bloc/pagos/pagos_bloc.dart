@@ -14,6 +14,7 @@ const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 
 class PagosBloc extends Bloc<PagosEvent, PagosState> {
   final Payment paymentUseCase;
+  final QramountPayment qrAmountPaymentUseCase;
   final TopUpMoney topUpMoneyUseCase;
   final WithdrawMoney withdrawMoneyUseCase;
   final GenerateAmountQr generateAmountQrUseCase;
@@ -21,12 +22,14 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
 
   PagosBloc(
       {required this.paymentUseCase,
+      required this.qrAmountPaymentUseCase,
       required this.generateAmountQrUseCase,
       required this.topUpMoneyUseCase,
       required this.withdrawMoneyUseCase,
       required this.keyValueStorageService})
       : super(PaymentInitial()) {
     on<PaymentEvent>(_onPaymentRequested);
+    on<QrAmountPaymentEvent>(_onQrAmountPaymentRequested);
     on<WithdrawEvent>(_onWithdrawRequested);
     on<TopUpEvent>(_onTopUpRequested);
     on<GenerateAmountQrEvent>(_onGenerateAmmounQrRequested);
@@ -37,6 +40,18 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
     emit(Revisando());
     final failureOrMessage = await paymentUseCase(
         PaymentParams(correo: event.correo, amount: event.monto));
+    await failureOrMessage.fold((failure) {
+      emit(PaymentError(message: _mapFailureToMessage(failure)));
+    }, (message) async {
+      emit(PaymentComplete(message: message));
+    });
+  }
+
+  Future<void> _onQrAmountPaymentRequested(
+      QrAmountPaymentEvent event, Emitter<PagosState> emit) async {
+    emit(Revisando());
+    final failureOrMessage = await qrAmountPaymentUseCase(
+        QrAmountPaymentParams(payload: event.payload, monto: event.monto));
     await failureOrMessage.fold((failure) {
       emit(PaymentError(message: _mapFailureToMessage(failure)));
     }, (message) async {

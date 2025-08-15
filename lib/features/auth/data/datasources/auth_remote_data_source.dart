@@ -144,6 +144,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           },
         ),
       );
+      print('El qr del usuario es: ${result.data['codigoQr']}');
       if (result.statusCode == 200) {
         return UserModel.fromJson(result.data);
       }
