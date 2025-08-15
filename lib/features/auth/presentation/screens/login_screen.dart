@@ -47,7 +47,7 @@ class _LoginForm extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final checkingRequest = state is Checking || state is Authenticated;
+        final checkingRequest = state is Comprobando || state is Authenticated;
 
         return Container(
           width: double.infinity,

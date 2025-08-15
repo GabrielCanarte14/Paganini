@@ -121,7 +121,7 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
       builder: (context, state) {
         Widget content;
 
-        if (state is Checking) {
+        if (state is Consultando) {
           content = const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Center(child: CircularProgressIndicator()),
@@ -147,7 +147,7 @@ class _RecentTransactionsWidgetState extends State<RecentTransactionsWidget> {
               ],
             ),
           );
-        } else if (state is Complete) {
+        } else if (state is Completo) {
           final items = _ordenarYTomar3(List<dynamic>.from(state.historial));
           if (items.isEmpty) {
             content = const Padding(

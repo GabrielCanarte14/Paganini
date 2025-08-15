@@ -37,4 +37,30 @@ class PaymentRepositoryImpl implements PaymentRepository {
       return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> topUpMoney(
+      int methodID, double amount) async {
+    try {
+      final result = await paymentDataSource.topUpMoney(amount, methodID);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> withdrawMoney(
+      int methodID, double amount) async {
+    try {
+      final result = await paymentDataSource.withdrawMoney(amount, methodID);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(DioFailure(errorMessage: e.message));
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
 }

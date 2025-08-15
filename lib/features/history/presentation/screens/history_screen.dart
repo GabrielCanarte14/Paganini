@@ -138,7 +138,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: BlocBuilder<HistorialBloc, HistorialState>(
         builder: (context, state) {
-          if (state is Checking) {
+          if (state is Consultando) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -171,7 +171,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             );
           }
-          if (state is Complete) {
+          if (state is Completo) {
             final List<dynamic> items = state.historial;
             if (items.isEmpty) {
               return const Center(child: Text('No hay movimientos'));

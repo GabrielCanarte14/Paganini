@@ -47,7 +47,7 @@ final appRouter = GoRouter(
       return '/login';
     }
 
-    if (authBloc.state is Checking) {
+    if (authBloc.state is Comprobando) {
       return null;
     }
 

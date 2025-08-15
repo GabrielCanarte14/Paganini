@@ -25,12 +25,12 @@ class HistorialBloc extends Bloc<HistorialEvent, HistorialState> {
 
   Future<void> _onGetHistorialRequested(
       GetHistorialEvent event, Emitter<HistorialState> emit) async {
-    emit(Checking());
+    emit(Consultando());
     final failureOrHistorial = await getHistorialUseCase(NoParams());
     await failureOrHistorial.fold((failure) {
       emit(HistorialError(message: _mapFailureToMessage(failure)));
     }, (historial) async {
-      emit(Complete(historial: historial));
+      emit(Completo(historial: historial));
     });
   }
 

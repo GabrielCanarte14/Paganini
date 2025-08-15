@@ -22,6 +22,28 @@ class PaymentComplete extends PagosState {
   List<Object> get props => [message];
 }
 
+class TopUpComplete extends PagosState {
+  final String message;
+
+  const TopUpComplete({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [message];
+}
+
+class WithdrawComplete extends PagosState {
+  final String message;
+
+  const WithdrawComplete({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [message];
+}
+
 class AmountQrComplete extends PagosState {
   final QrPayloadModel qr;
 

@@ -27,10 +27,14 @@ class PaymentMethodsDataSourceImpl implements PaymentMethodsDataSource {
 
   @override
   Future<List<dynamic>> getPaymentMethods(String correo) async {
+    final email = await keyValueStorageService.getValue<String>('email');
     final rawToken = await keyValueStorageService.getValue<String>('token');
     final token = rawToken?.trim().replaceAll('\r', '').replaceAll('\n', '');
     if (token == null || token.isEmpty) {
       throw TimeoutException();
+    }
+    if (correo == '') {
+      correo = email!;
     }
     try {
       final result = await _client.get(

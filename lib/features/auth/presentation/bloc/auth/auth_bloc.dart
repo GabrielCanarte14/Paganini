@@ -48,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLoginRequested(
       LoginEvent event, Emitter<AuthState> emit) async {
-    emit(Checking());
+    emit(Comprobando());
     final failureOrUser = await loginUseCase(
         Params(username: event.username, password: event.password));
     await failureOrUser!.fold((failure) {
@@ -76,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLogoutRequested(
       LogoutEvent event, Emitter<AuthState> emit) async {
-    emit(Checking());
+    emit(Comprobando());
     if (event.user == null) {
       emit(Unauthenticated());
       await keyValueStorageService.removeKey('token');
@@ -88,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onCheckAuthStatus(
       CheckAuthStatusEvent event, Emitter<AuthState> emit) async {
     print('Chekeando');
-    emit(Checking());
+    emit(Comprobando());
     print('Chekeando');
     final token = await keyValueStorageService.getValue<String>('token');
     final username = await keyValueStorageService.getValue<String>('username');
@@ -108,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onForgotPassword(
       ForgotPasswordEvent event, Emitter<AuthState> emit) async {
-    emit(Checking());
+    emit(Comprobando());
     final failureOrUser =
         await forgotPasswordUseCase(ForgotParams(email: event.email));
     failureOrUser?.fold(
@@ -123,7 +123,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onResetPassword(
       ResetPasswordEvent event, Emitter<AuthState> emit) async {
-    emit(Checking());
+    emit(Comprobando());
     final failureOrUser = await resetPasswordUseCase(ResetParams(
         email: event.email, codigo: event.codigo, password: event.password));
     failureOrUser?.fold(

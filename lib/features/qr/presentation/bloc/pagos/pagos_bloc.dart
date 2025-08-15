@@ -14,15 +14,21 @@ const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
 
 class PagosBloc extends Bloc<PagosEvent, PagosState> {
   final Payment paymentUseCase;
+  final TopUpMoney topUpMoneyUseCase;
+  final WithdrawMoney withdrawMoneyUseCase;
   final GenerateAmountQr generateAmountQrUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
   PagosBloc(
       {required this.paymentUseCase,
       required this.generateAmountQrUseCase,
+      required this.topUpMoneyUseCase,
+      required this.withdrawMoneyUseCase,
       required this.keyValueStorageService})
       : super(PaymentInitial()) {
     on<PaymentEvent>(_onPaymentRequested);
+    on<WithdrawEvent>(_onWithdrawRequested);
+    on<TopUpEvent>(_onTopUpRequested);
     on<GenerateAmountQrEvent>(_onGenerateAmmounQrRequested);
   }
 
@@ -35,6 +41,30 @@ class PagosBloc extends Bloc<PagosEvent, PagosState> {
       emit(PaymentError(message: _mapFailureToMessage(failure)));
     }, (message) async {
       emit(PaymentComplete(message: message));
+    });
+  }
+
+  Future<void> _onWithdrawRequested(
+      WithdrawEvent event, Emitter<PagosState> emit) async {
+    emit(Revisando());
+    final failureOrMessage = await withdrawMoneyUseCase(
+        WithdrawParams(methodId: event.methodId, amount: event.monto));
+    await failureOrMessage.fold((failure) {
+      emit(PaymentError(message: _mapFailureToMessage(failure)));
+    }, (message) async {
+      emit(WithdrawComplete(message: message));
+    });
+  }
+
+  Future<void> _onTopUpRequested(
+      TopUpEvent event, Emitter<PagosState> emit) async {
+    emit(Revisando());
+    final failureOrMessage = await topUpMoneyUseCase(
+        TopUpParams(methodId: event.methodId, amount: event.monto));
+    await failureOrMessage.fold((failure) {
+      emit(PaymentError(message: _mapFailureToMessage(failure)));
+    }, (message) async {
+      emit(TopUpComplete(message: message));
     });
   }
 

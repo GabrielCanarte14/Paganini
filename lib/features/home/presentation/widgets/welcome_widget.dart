@@ -4,6 +4,8 @@ import 'package:paganini_wallet/core/constants/colors.dart';
 import 'package:paganini_wallet/features/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:paganini_wallet/features/qr/presentation/screens/contactos_screen.dart';
 import 'package:paganini_wallet/features/qr/presentation/screens/generate_qr_screen.dart';
+import 'package:paganini_wallet/features/qr/presentation/screens/top_up_screen.dart';
+import 'package:paganini_wallet/features/qr/presentation/screens/withdraw_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class WelcomeAndBalanceWidget extends StatefulWidget {
@@ -77,12 +79,20 @@ class _WelcomeAndBalanceWidgetState extends State<WelcomeAndBalanceWidget> {
       {
         'icon': Icons.add,
         'label': 'Recargar',
-        'accion': () => widget.controller.jumpToTab(2)
+        'accion': () => Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                builder: (_) => const TopUpScreen(email: ''),
+              ),
+            )
       },
       {
         'icon': Icons.miscellaneous_services,
         'label': 'Retirar',
-        'accion': () => widget.controller.jumpToTab(2)
+        'accion': () => Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                builder: (_) => const WithdrawScreen(email: ''),
+              ),
+            )
       },
     ];
 

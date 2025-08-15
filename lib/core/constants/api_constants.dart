@@ -17,3 +17,5 @@ final paymentUrl = '${apiUrl}api/transacciones/enviar/correo';
 final generateQrUrl = '${apiUrl}transactions/payment-requests';
 final getHistoryUrl = '${apiUrl}api/transacciones/historial';
 final getNotificacionesUrl = '${apiUrl}api/notifications/device';
+final topUpUrl = '${apiUrl}api/transacciones/recarga';
+final withdrawUrl = '${apiUrl}api/transacciones/retiro';

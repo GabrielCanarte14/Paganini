@@ -9,12 +9,12 @@ sealed class HistorialState extends Equatable {
 
 class Empty extends HistorialState {}
 
-class Checking extends HistorialState {}
+class Consultando extends HistorialState {}
 
-class Complete extends HistorialState {
+class Completo extends HistorialState {
   final List<dynamic> historial;
 
-  const Complete({this.historial = const []});
+  const Completo({this.historial = const []});
 
   @override
   List<Object> get props => [historial];

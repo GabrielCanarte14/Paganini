@@ -9,7 +9,7 @@ sealed class AuthState extends Equatable {
 
 class Empty extends AuthState {}
 
-class Checking extends AuthState {}
+class Comprobando extends AuthState {}
 
 class Registering extends AuthState {}
 

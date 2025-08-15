@@ -73,7 +73,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
           }
         },
         builder: (context, state) {
-          final bool isLoading = state is Checking;
+          final bool isLoading = state is Comprobando;
           final String? successMsg = state is Register ? state.mensaje : null;
 
           return Padding(

@@ -80,7 +80,7 @@ class _ForgotPasswordFormState extends State<_NewPasswordScreenForm> {
           }
         },
         builder: (context, state) {
-          final bool isLoading = state is Checking;
+          final bool isLoading = state is Comprobando;
           final String? successMsg = state is Register ? state.mensaje : null;
           return Padding(
             padding: const EdgeInsets.fromLTRB(25, 30, 25, 20),

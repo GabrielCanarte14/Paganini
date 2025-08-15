@@ -3,3 +3,5 @@ export './registerContact.dart';
 export './deleteContact.dart';
 export './payment.dart';
 export './generate_amount_qr.dart';
+export './withdrawMoney.dart';
+export './topUpMoney.dart';

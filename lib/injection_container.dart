@@ -96,6 +96,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Payment(sl()));
   sl.registerLazySingleton(() => GenerateAmountQr(sl()));
   sl.registerLazySingleton(() => GetHistory(sl()));
+  sl.registerLazySingleton(() => WithdrawMoney(sl()));
+  sl.registerLazySingleton(() => TopUpMoney(sl()));
 
   //! Auth
   sl.registerLazySingleton(() => AuthBloc(
@@ -126,6 +128,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PagosBloc(
         paymentUseCase: sl(),
         generateAmountQrUseCase: sl(),
+        topUpMoneyUseCase: sl(),
+        withdrawMoneyUseCase: sl(),
         keyValueStorageService: sl<KeyValueStorageServiceImpl>(),
       ));
 
