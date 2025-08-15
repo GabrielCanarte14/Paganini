@@ -91,7 +91,7 @@ class BankItem extends StatelessWidget {
                             color: Colors.black87,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         Row(children: [
                           Expanded(
                               child: _labelValue(

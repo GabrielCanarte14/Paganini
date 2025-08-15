@@ -10,12 +10,9 @@ import 'package:paganini_wallet/features/payments_methods/presentation/widgets/w
 class PaymentMethodsWidget extends StatefulWidget {
   final PersistentTabController controller;
 
-  final String? email;
-
   const PaymentMethodsWidget({
     super.key,
     required this.controller,
-    this.email,
   });
 
   @override
@@ -31,9 +28,7 @@ class _PaymentMethodsWidgetState extends State<PaymentMethodsWidget>
   @override
   void initState() {
     super.initState();
-    if (widget.email != null && widget.email!.isNotEmpty) {
-      context.read<MethodsBloc>().add(GetMethodsEvent(email: widget.email!));
-    }
+    context.read<MethodsBloc>().add(GetMethodsEvent(email: ''));
   }
 
   @override

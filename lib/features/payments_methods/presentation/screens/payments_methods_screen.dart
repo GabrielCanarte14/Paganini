@@ -10,8 +10,7 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class PaymentsMethodsScreen extends StatefulWidget {
-  final String email;
-  const PaymentsMethodsScreen({super.key, required this.email});
+  const PaymentsMethodsScreen({super.key});
 
   @override
   State<PaymentsMethodsScreen> createState() => _PaymentsMethodsScreenState();
@@ -21,11 +20,11 @@ class _PaymentsMethodsScreenState extends State<PaymentsMethodsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<MethodsBloc>().add(GetMethodsEvent(email: widget.email));
+    context.read<MethodsBloc>().add(GetMethodsEvent(email: ''));
   }
 
   Future<void> _refresh() async {
-    context.read<MethodsBloc>().add(GetMethodsEvent(email: widget.email));
+    context.read<MethodsBloc>().add(GetMethodsEvent(email: ''));
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
@@ -51,7 +50,7 @@ class _PaymentsMethodsScreenState extends State<PaymentsMethodsScreen> {
                 backgroundColor: Colors.transparent,
                 isScrollControlled: true,
                 useRootNavigator: true,
-                builder: (context) => AddMethodModal(email: widget.email),
+                builder: (context) => AddMethodModal(email: ''),
               );
             },
           ),
