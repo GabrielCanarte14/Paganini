@@ -61,48 +61,70 @@ class _RegistroTarjetaScreenState extends State<RegistroTarjetaScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext context) {
-        return SizedBox(
-          height: 250,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32.0,
-                        scrollController: FixedExtentScrollController(
-                            initialItem: selectedMonth),
-                        onSelectedItemChanged: (index) => selectedMonth = index,
-                        children:
-                            months.map((m) => Center(child: Text(m))).toList(),
+        final bottomInset = MediaQuery.of(context).viewPadding.bottom;
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomInset),
+            child: SizedBox(
+              height: 280,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoPicker(
+                            itemExtent: 32.0,
+                            scrollController: FixedExtentScrollController(
+                                initialItem: selectedMonth),
+                            onSelectedItemChanged: (index) =>
+                                selectedMonth = index,
+                            children: months
+                                .map((m) => Center(child: Text(m)))
+                                .toList(),
+                          ),
+                        ),
+                        Expanded(
+                          child: CupertinoPicker(
+                            itemExtent: 32.0,
+                            scrollController: FixedExtentScrollController(
+                                initialItem: selectedYear),
+                            onSelectedItemChanged: (index) =>
+                                selectedYear = index,
+                            children: years
+                                .map((y) => Center(child: Text(y)))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final selected =
+                              '${months[selectedMonth]}/${years[selectedYear].substring(2)}';
+                          setState(() => expiryDate = selected);
+                          expiryController.text = selected;
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Aceptar'),
                       ),
                     ),
-                    Expanded(
-                      child: CupertinoPicker(
-                        itemExtent: 32.0,
-                        scrollController: FixedExtentScrollController(
-                            initialItem: selectedYear),
-                        onSelectedItemChanged: (index) => selectedYear = index,
-                        children:
-                            years.map((y) => Center(child: Text(y))).toList(),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () {
-                  final selected =
-                      '${months[selectedMonth]}/${years[selectedYear].substring(2)}';
-                  setState(() => expiryDate = selected);
-                  expiryController.text = selected;
-                  Navigator.pop(context);
-                },
-                child: const Text('Aceptar'),
-              ),
-            ],
+            ),
           ),
         );
       },

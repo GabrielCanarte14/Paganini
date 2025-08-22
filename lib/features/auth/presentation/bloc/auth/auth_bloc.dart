@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -28,15 +30,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ResetPasswordUseCase resetPasswordUseCase;
   final KeyValueStorageServiceImpl keyValueStorageService;
 
-  AuthBloc(
-      {required this.loginUseCase,
-      required this.logoutUseCase,
-      required this.registerUserUseCase,
-      required this.forgotPasswordUseCase,
-      required this.getUserData,
-      required this.resetPasswordUseCase,
-      required this.keyValueStorageService})
-      : super(AuthInitial()) {
+  Timer? _expiryTimer;
+
+  AuthBloc({
+    required this.loginUseCase,
+    required this.logoutUseCase,
+    required this.registerUserUseCase,
+    required this.forgotPasswordUseCase,
+    required this.getUserData,
+    required this.resetPasswordUseCase,
+    required this.keyValueStorageService,
+  }) : super(AuthInitial()) {
     on<LoginEvent>(_onLoginRequested);
     on<LogoutEvent>(_onLogoutRequested);
     on<RegisterEvent>(_onRegisterRequested);
@@ -44,6 +48,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ForgotPasswordEvent>(_onForgotPassword);
     on<ResetPasswordEvent>(_onResetPassword);
     on<GetUserDataEvent>(_onGetUserData);
+    on<SessionStartedEvent>(_onSessionStarted);
+    on<SessionExpiredEvent>(_onSessionExpired);
   }
 
   Future<void> _onLoginRequested(
@@ -54,7 +60,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     await failureOrUser!.fold((failure) {
       emit(UserError(message: _mapFailureToMessage(failure)));
     }, (user) async {
-      emit(Authenticated());
+      final expiresAt = DateTime.now().add(const Duration(minutes: 14));
+      await keyValueStorageService.setKeyValue(
+          'expiresAt', expiresAt.toIso8601String());
+      add(SessionStartedEvent(expiresAt: expiresAt));
     });
   }
 
@@ -62,11 +71,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       RegisterEvent event, Emitter<AuthState> emit) async {
     emit(Registering());
     final failureOrUser = await registerUserUseCase(RegisterParams(
-        name: event.name,
-        lastname: event.lastname,
-        email: event.email,
-        phone: event.phone,
-        password: event.password));
+      name: event.name,
+      lastname: event.lastname,
+      email: event.email,
+      phone: event.phone,
+      password: event.password,
+    ));
     await failureOrUser!.fold((failure) {
       emit(UserError(message: failure.errorMessage));
     }, (mensaje) async {
@@ -77,12 +87,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onLogoutRequested(
       LogoutEvent event, Emitter<AuthState> emit) async {
     emit(Comprobando());
-    if (event.user == null) {
-      emit(Unauthenticated());
-      await keyValueStorageService.removeKey('token');
-      await Hive.box('UserModel').clear();
-      return;
-    }
+    _expiryTimer?.cancel();
+    _expiryTimer = null;
+    await keyValueStorageService.removeKey('token');
+    await keyValueStorageService.removeKey('expiresAt');
+    await Hive.box('UserModel').clear();
+    emit(Unauthenticated());
   }
 
   Future<void> _onCheckAuthStatus(
@@ -91,6 +101,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final token = await keyValueStorageService.getValue<String>('token');
     final username = await keyValueStorageService.getValue<String>('username');
     final password = await keyValueStorageService.getValue<String>('password');
+    final expiresAtIso =
+        await keyValueStorageService.getValue<String>('expiresAt');
 
     if (token == null ||
         username == null ||
@@ -99,9 +111,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         username.trim().isEmpty ||
         password.trim().isEmpty) {
       add(const LogoutEvent());
-    } else {
-      add(LoginEvent(username: username, password: password));
+      return;
     }
+
+    if (expiresAtIso == null || expiresAtIso.isEmpty) {
+      add(const LogoutEvent());
+      return;
+    }
+
+    final expiresAt = DateTime.tryParse(expiresAtIso);
+    if (expiresAt == null || DateTime.now().isAfter(expiresAt)) {
+      add(const LogoutEvent());
+      return;
+    }
+
+    add(SessionStartedEvent(expiresAt: expiresAt));
   }
 
   Future<void> _onForgotPassword(
@@ -145,6 +169,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
+  Future<void> _onSessionStarted(
+      SessionStartedEvent event, Emitter<AuthState> emit) async {
+    _expiryTimer?.cancel();
+    final now = DateTime.now();
+    final duration = event.expiresAt.difference(now);
+    final safe = duration.isNegative ? Duration.zero : duration;
+    _expiryTimer = Timer(safe, () => add(SessionExpiredEvent()));
+    emit(Authenticated(mensaje: 'Sesión iniciada', expiresAt: event.expiresAt));
+  }
+
+  Future<void> _onSessionExpired(
+      SessionExpiredEvent event, Emitter<AuthState> emit) async {
+    _expiryTimer?.cancel();
+    _expiryTimer = null;
+    await keyValueStorageService.removeKey('token');
+    await keyValueStorageService.removeKey('expiresAt');
+    await Hive.box('UserModel').clear();
+    emit(Unauthenticated());
+  }
+
   String _mapFailureToMessage(Failure failure) {
     if (failure is DioFailure) {
       return failure.errorMessage;
@@ -155,5 +199,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       return 'Unexpected error';
     }
+  }
+
+  @override
+  Future<void> close() {
+    _expiryTimer?.cancel();
+    return super.close();
   }
 }

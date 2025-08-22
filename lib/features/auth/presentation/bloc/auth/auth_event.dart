@@ -85,3 +85,16 @@ class AuthErrorEvent extends AuthEvent {
   @override
   List<Object> get props => [message];
 }
+
+class SessionStartedEvent extends AuthEvent {
+  final DateTime expiresAt;
+
+  const SessionStartedEvent({
+    required this.expiresAt,
+  });
+
+  @override
+  List<Object> get props => [expiresAt];
+}
+
+class SessionExpiredEvent extends AuthEvent {}

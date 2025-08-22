@@ -40,8 +40,11 @@ class Actualizado extends AuthState {
 
 class Authenticated extends AuthState {
   final String mensaje;
-
-  const Authenticated({this.mensaje = ''});
+  final DateTime expiresAt;
+  const Authenticated({
+    this.mensaje = '',
+    required this.expiresAt,
+  });
 
   @override
   List<Object> get props => [];

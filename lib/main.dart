@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:paganini_wallet/core/utils/life_cycle_watcher.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -104,7 +107,7 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp],
     ).then((_) {
       _wireUpForegroundNotifications();
-      runApp(const MyApp());
+      runApp((AuthLifecycleWatcher(child: const MyApp())));
     }),
   );
   authBloc.add(CheckAuthStatusEvent());
